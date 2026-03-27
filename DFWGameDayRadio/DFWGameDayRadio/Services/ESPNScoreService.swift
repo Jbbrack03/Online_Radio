@@ -63,7 +63,9 @@ class ESPNScoreService: ScoreProvider {
         guard let url = URL(string: endpoint) else { return nil }
 
         do {
+            let startTime = Date()
             let (data, _) = try await session.data(from: url)
+            StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
             let scoreboard = try JSONDecoder().decode(ESPNScoreboard.self, from: data)
             await MainActor.run { self.lastError = nil }
             return scoreboard

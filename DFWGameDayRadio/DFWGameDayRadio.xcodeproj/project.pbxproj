@@ -1,0 +1,660 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0110821202DAAB722186FEF6 /* DFWGameDayRadioWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 311929143580834226AE7FB0 /* DFWGameDayRadioWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0614C59D3AEB80FCC235AD95 /* GameCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149B848F7602DE1C8B46942A /* GameCoordinator.swift */; };
+		103E5A0ADF85F8A97602F858 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF682C8D5637ED2532BE88C1 /* Constants.swift */; };
+		135319B36C32A12C4186FD6C /* StreamLatencyEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F57535C851BFAA1DFC30A89 /* StreamLatencyEstimator.swift */; };
+		1D7BB6985A9FB0A5C255666B /* FootballFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E50408E48DF39B84C4396F4 /* FootballFieldView.swift */; };
+		2EB05D31040B339A272A23D8 /* SituationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE55C994E5457164FA59FC5 /* SituationView.swift */; };
+		2F2C2267BB82C08D89706B6C /* GameSituation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D5546CFC72C9AB608E2C30 /* GameSituation.swift */; };
+		339E5232A4489B3490EE29BB /* GameScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9104975929A834BE16E596 /* GameScore.swift */; };
+		35BDF4B89EC4665D8CE3B09B /* ESPNResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF5BAAC37D35B8B2E0DE84C /* ESPNResponse.swift */; };
+		3808F88200D47D4EFF171988 /* ScoreLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE63051400FB17FE8B75E5B7 /* ScoreLiveActivity.swift */; };
+		428348A6D578A17D2FC4058A /* NHLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B59418626E37CF2A7A7CA5 /* NHLResponse.swift */; };
+		45918C7A121F4872F7CA2731 /* StationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFB6CC2C8CCB754C7677065 /* StationPickerView.swift */; };
+		4A6031EE2ACAB5624EFE9BF7 /* MLBResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F0726BB3D4A203A6D7F99 /* MLBResponse.swift */; };
+		5446AE76F740B9E2BBBB2F18 /* SituationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE55C994E5457164FA59FC5 /* SituationView.swift */; };
+		61D5074A5B3D8DF480E4DB76 /* BasketballCourtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CD59FF2776DBB1E76C6FF2 /* BasketballCourtView.swift */; };
+		6C5B24D094EC662AA6567CEA /* ScoreActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708760D01589C2982C2778F /* ScoreActivityAttributes.swift */; };
+		7AFA3D1DE30CE0DADFE8A905 /* DFWGameDayRadioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDA3AAEC1335EC3945776FE /* DFWGameDayRadioApp.swift */; };
+		7D2F69F22A5E3B965B07610A /* ScoreActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708760D01589C2982C2778F /* ScoreActivityAttributes.swift */; };
+		83F327AEF3D3DC3B271BF5BB /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8882865D190D61121A681CB5 /* UserDefaultsKeys.swift */; };
+		84CC31485D24C9052EE010A2 /* ScoreProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E01FD63D80BD0B23D87904 /* ScoreProvider.swift */; };
+		8BCA3B1FCB0AD83D79D603AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EF8D9EDC70FCCE4BE369B87 /* Assets.xcassets */; };
+		97942F79F5BAD0922F4B0BCA /* AudioStreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A183882015E515124C53F4 /* AudioStreamManager.swift */; };
+		9D890B12C88352577C271CD0 /* BaseballDiamondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAE708397AE64CBBDBE264 /* BaseballDiamondView.swift */; };
+		A04610CE9D9C709881098D5F /* GameListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7333711CFE3809607D9AEB10 /* GameListView.swift */; };
+		A2FE6F374BA40427E68DCB6D /* MLBScoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B503086AAC8EC1CCB4FC32 /* MLBScoreService.swift */; };
+		A4808087D0F84F8F324360E4 /* BasketballCourtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CD59FF2776DBB1E76C6FF2 /* BasketballCourtView.swift */; };
+		AE4BA54240FEE8B015269DCE /* BaseballDiamondView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAE708397AE64CBBDBE264 /* BaseballDiamondView.swift */; };
+		AE4DEE5969AD8F67816F2B82 /* NBAResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5324774D394F74DAE0839B4F /* NBAResponse.swift */; };
+		AEB4F6AC285B2D39FAACB261 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693454D62C9DD4B4269AF33 /* AppDelegate.swift */; };
+		B6164EC43E0BE61910D2AF19 /* DFWGameDayRadioWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20E761BDF79D8C82E71F5EE /* DFWGameDayRadioWidgetBundle.swift */; };
+		BEA4DBACADD811228C41D5EC /* RadioStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBCF7EA02327869191535499 /* RadioStation.swift */; };
+		BFBF5E0E4B2B4A839486D9F0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D83DBEB2C54ED7648650B8 /* SettingsView.swift */; };
+		C12CA78C61A8CADCD4658CE6 /* CarPlayTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEBED8E8CC6AA079B4B99A9 /* CarPlayTemplateManager.swift */; };
+		C382B5498FCE82B0425E8D9E /* NBAScoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6771CCD3A49067D2A8BF5193 /* NBAScoreService.swift */; };
+		C789864C5A1C31D05221CD84 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EFA9167F340CA922437273 /* CarPlaySceneDelegate.swift */; };
+		C968A97E28920BEDBA530C5D /* GameSituation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D5546CFC72C9AB608E2C30 /* GameSituation.swift */; };
+		C9D2C8F2E8C7442C872B485B /* NHLScoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEC6EC4C45090842524429B /* NHLScoreService.swift */; };
+		CC01A0FE8E9C540B26DDE912 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F969278DDBDC04403A688DE8 /* LiveActivityManager.swift */; };
+		D0A6CBCF24BFA019C4C56DB1 /* HockeyRinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C0E505989874477EA174A5 /* HockeyRinkView.swift */; };
+		D8A045F727464A7A9BDD0B72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4FBC71DBCD945CEB48DDA9 /* ContentView.swift */; };
+		DB21FE559CDB3EC67FBAB455 /* HockeyRinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C0E505989874477EA174A5 /* HockeyRinkView.swift */; };
+		DC222C763D6033D27A473CC3 /* DallasTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E04FF127C7CEAB037C6DCEB /* DallasTeam.swift */; };
+		DCB54E740D471A6C923AC46E /* ESPNScoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8250098855CAC9F0F2C767 /* ESPNScoreService.swift */; };
+		E0DC5335DB4A5A7A352FC1B3 /* FootballFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E50408E48DF39B84C4396F4 /* FootballFieldView.swift */; };
+		E3BC5882B0C143D2C1BD0D73 /* ScoreDelayQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618D08C373E2C1CD7D26BBC7 /* ScoreDelayQueue.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D38AE1F195965C0C0E5CFF97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0DEF21FD95F4CAE6070B08DD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 981D7B09B2DB233EB8BAD15A;
+			remoteInfo = DFWGameDayRadioWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B4A20B6A258FB6F25642E74B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0110821202DAAB722186FEF6 /* DFWGameDayRadioWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		07D5546CFC72C9AB608E2C30 /* GameSituation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSituation.swift; sourceTree = "<group>"; };
+		0AFB6CC2C8CCB754C7677065 /* StationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationPickerView.swift; sourceTree = "<group>"; };
+		0F57535C851BFAA1DFC30A89 /* StreamLatencyEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamLatencyEstimator.swift; sourceTree = "<group>"; };
+		149B848F7602DE1C8B46942A /* GameCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCoordinator.swift; sourceTree = "<group>"; };
+		15B59418626E37CF2A7A7CA5 /* NHLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NHLResponse.swift; sourceTree = "<group>"; };
+		1E50408E48DF39B84C4396F4 /* FootballFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootballFieldView.swift; sourceTree = "<group>"; };
+		26CD59FF2776DBB1E76C6FF2 /* BasketballCourtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketballCourtView.swift; sourceTree = "<group>"; };
+		2BF5BAAC37D35B8B2E0DE84C /* ESPNResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPNResponse.swift; sourceTree = "<group>"; };
+		311929143580834226AE7FB0 /* DFWGameDayRadioWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = DFWGameDayRadioWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D8250098855CAC9F0F2C767 /* ESPNScoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPNScoreService.swift; sourceTree = "<group>"; };
+		3DEAE708397AE64CBBDBE264 /* BaseballDiamondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseballDiamondView.swift; sourceTree = "<group>"; };
+		4DEBED8E8CC6AA079B4B99A9 /* CarPlayTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayTemplateManager.swift; sourceTree = "<group>"; };
+		4EF8D9EDC70FCCE4BE369B87 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5324774D394F74DAE0839B4F /* NBAResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NBAResponse.swift; sourceTree = "<group>"; };
+		58B503086AAC8EC1CCB4FC32 /* MLBScoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLBScoreService.swift; sourceTree = "<group>"; };
+		618D08C373E2C1CD7D26BBC7 /* ScoreDelayQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreDelayQueue.swift; sourceTree = "<group>"; };
+		6771CCD3A49067D2A8BF5193 /* NBAScoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NBAScoreService.swift; sourceTree = "<group>"; };
+		7333711CFE3809607D9AEB10 /* GameListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameListView.swift; sourceTree = "<group>"; };
+		808FF983DE9F0EC90A112921 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8693454D62C9DD4B4269AF33 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8882865D190D61121A681CB5 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		89C7A558BF8584935C3EDAF5 /* DFWGameDayRadio.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DFWGameDayRadio.entitlements; sourceTree = "<group>"; };
+		8E04FF127C7CEAB037C6DCEB /* DallasTeam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DallasTeam.swift; sourceTree = "<group>"; };
+		9EDA3AAEC1335EC3945776FE /* DFWGameDayRadioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFWGameDayRadioApp.swift; sourceTree = "<group>"; };
+		9EEC6EC4C45090842524429B /* NHLScoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NHLScoreService.swift; sourceTree = "<group>"; };
+		AB4FBC71DBCD945CEB48DDA9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AC9104975929A834BE16E596 /* GameScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScore.swift; sourceTree = "<group>"; };
+		AFE55C994E5457164FA59FC5 /* SituationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationView.swift; sourceTree = "<group>"; };
+		B20E761BDF79D8C82E71F5EE /* DFWGameDayRadioWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFWGameDayRadioWidgetBundle.swift; sourceTree = "<group>"; };
+		B4C0E505989874477EA174A5 /* HockeyRinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HockeyRinkView.swift; sourceTree = "<group>"; };
+		BBCF7EA02327869191535499 /* RadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStation.swift; sourceTree = "<group>"; };
+		D4A183882015E515124C53F4 /* AudioStreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamManager.swift; sourceTree = "<group>"; };
+		D708760D01589C2982C2778F /* ScoreActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreActivityAttributes.swift; sourceTree = "<group>"; };
+		E28F0726BB3D4A203A6D7F99 /* MLBResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLBResponse.swift; sourceTree = "<group>"; };
+		E6A2960A70212AFE2E546217 /* DFWGameDayRadio.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DFWGameDayRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6EFA9167F340CA922437273 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		E828798D529BE862E708F84D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F4D83DBEB2C54ED7648650B8 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F5E01FD63D80BD0B23D87904 /* ScoreProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreProvider.swift; sourceTree = "<group>"; };
+		F969278DDBDC04403A688DE8 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		FE63051400FB17FE8B75E5B7 /* ScoreLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreLiveActivity.swift; sourceTree = "<group>"; };
+		FF682C8D5637ED2532BE88C1 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0610B2146C305277A322F349 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8693454D62C9DD4B4269AF33 /* AppDelegate.swift */,
+				9EDA3AAEC1335EC3945776FE /* DFWGameDayRadioApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2B34E30C3B8B68AD5BF437DA /* DFWGameDayRadioWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B20E761BDF79D8C82E71F5EE /* DFWGameDayRadioWidgetBundle.swift */,
+				E828798D529BE862E708F84D /* Info.plist */,
+				FE63051400FB17FE8B75E5B7 /* ScoreLiveActivity.swift */,
+			);
+			path = DFWGameDayRadioWidget;
+			sourceTree = "<group>";
+		};
+		36DF42662B160461E0D93FDA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4EF8D9EDC70FCCE4BE369B87 /* Assets.xcassets */,
+				89C7A558BF8584935C3EDAF5 /* DFWGameDayRadio.entitlements */,
+				808FF983DE9F0EC90A112921 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3C2D01265E6E436AB6FF0067 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DEAE708397AE64CBBDBE264 /* BaseballDiamondView.swift */,
+				26CD59FF2776DBB1E76C6FF2 /* BasketballCourtView.swift */,
+				1E50408E48DF39B84C4396F4 /* FootballFieldView.swift */,
+				B4C0E505989874477EA174A5 /* HockeyRinkView.swift */,
+				AFE55C994E5457164FA59FC5 /* SituationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4483D2C9C7BBCC1ED20202DB /* CarPlay */ = {
+			isa = PBXGroup;
+			children = (
+				E6EFA9167F340CA922437273 /* CarPlaySceneDelegate.swift */,
+				4DEBED8E8CC6AA079B4B99A9 /* CarPlayTemplateManager.swift */,
+			);
+			path = CarPlay;
+			sourceTree = "<group>";
+		};
+		4A3DF85563FE7EDEDB077C3B /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				07D5546CFC72C9AB608E2C30 /* GameSituation.swift */,
+				D708760D01589C2982C2778F /* ScoreActivityAttributes.swift */,
+				3C2D01265E6E436AB6FF0067 /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		9FB4449ED842C2D6407EDBBE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AB4FBC71DBCD945CEB48DDA9 /* ContentView.swift */,
+				7333711CFE3809607D9AEB10 /* GameListView.swift */,
+				F4D83DBEB2C54ED7648650B8 /* SettingsView.swift */,
+				0AFB6CC2C8CCB754C7677065 /* StationPickerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1291629ABF3B7A7A0ABEC11 = {
+			isa = PBXGroup;
+			children = (
+				F8CAFC00C2C964A7350D0A2C /* DFWGameDayRadio */,
+				2B34E30C3B8B68AD5BF437DA /* DFWGameDayRadioWidget */,
+				4A3DF85563FE7EDEDB077C3B /* Shared */,
+				A60570A9B1BCCD5F3EC4D5AA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A60570A9B1BCCD5F3EC4D5AA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E6A2960A70212AFE2E546217 /* DFWGameDayRadio.app */,
+				311929143580834226AE7FB0 /* DFWGameDayRadioWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C2CE0E35FF8ECBA6B70FFF78 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8E04FF127C7CEAB037C6DCEB /* DallasTeam.swift */,
+				2BF5BAAC37D35B8B2E0DE84C /* ESPNResponse.swift */,
+				AC9104975929A834BE16E596 /* GameScore.swift */,
+				E28F0726BB3D4A203A6D7F99 /* MLBResponse.swift */,
+				5324774D394F74DAE0839B4F /* NBAResponse.swift */,
+				15B59418626E37CF2A7A7CA5 /* NHLResponse.swift */,
+				BBCF7EA02327869191535499 /* RadioStation.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EBCA65B8A57BEFF89493A899 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D4A183882015E515124C53F4 /* AudioStreamManager.swift */,
+				3D8250098855CAC9F0F2C767 /* ESPNScoreService.swift */,
+				149B848F7602DE1C8B46942A /* GameCoordinator.swift */,
+				F969278DDBDC04403A688DE8 /* LiveActivityManager.swift */,
+				58B503086AAC8EC1CCB4FC32 /* MLBScoreService.swift */,
+				6771CCD3A49067D2A8BF5193 /* NBAScoreService.swift */,
+				9EEC6EC4C45090842524429B /* NHLScoreService.swift */,
+				618D08C373E2C1CD7D26BBC7 /* ScoreDelayQueue.swift */,
+				F5E01FD63D80BD0B23D87904 /* ScoreProvider.swift */,
+				0F57535C851BFAA1DFC30A89 /* StreamLatencyEstimator.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F799E0194C9C2BFCC4628BD7 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FF682C8D5637ED2532BE88C1 /* Constants.swift */,
+				8882865D190D61121A681CB5 /* UserDefaultsKeys.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F8CAFC00C2C964A7350D0A2C /* DFWGameDayRadio */ = {
+			isa = PBXGroup;
+			children = (
+				0610B2146C305277A322F349 /* App */,
+				4483D2C9C7BBCC1ED20202DB /* CarPlay */,
+				C2CE0E35FF8ECBA6B70FFF78 /* Models */,
+				36DF42662B160461E0D93FDA /* Resources */,
+				EBCA65B8A57BEFF89493A899 /* Services */,
+				F799E0194C9C2BFCC4628BD7 /* Utilities */,
+				9FB4449ED842C2D6407EDBBE /* Views */,
+			);
+			path = DFWGameDayRadio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		53F056637D253ACF293BEDB8 /* DFWGameDayRadio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0F7B708EADB2AC4A24145CCE /* Build configuration list for PBXNativeTarget "DFWGameDayRadio" */;
+			buildPhases = (
+				64599B2787C6C4EFA88F197B /* Sources */,
+				B8B3FE202285CBA14235E2DC /* Resources */,
+				B4A20B6A258FB6F25642E74B /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EFBEAA823D856F253BE384C3 /* PBXTargetDependency */,
+			);
+			name = DFWGameDayRadio;
+			packageProductDependencies = (
+			);
+			productName = DFWGameDayRadio;
+			productReference = E6A2960A70212AFE2E546217 /* DFWGameDayRadio.app */;
+			productType = "com.apple.product-type.application";
+		};
+		981D7B09B2DB233EB8BAD15A /* DFWGameDayRadioWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2865DD37AAA1B7F76A0BB9AD /* Build configuration list for PBXNativeTarget "DFWGameDayRadioWidget" */;
+			buildPhases = (
+				9B0841AE0C1855BC9DBB707B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DFWGameDayRadioWidget;
+			packageProductDependencies = (
+			);
+			productName = DFWGameDayRadioWidget;
+			productReference = 311929143580834226AE7FB0 /* DFWGameDayRadioWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0DEF21FD95F4CAE6070B08DD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					53F056637D253ACF293BEDB8 = {
+						ProvisioningStyle = Automatic;
+					};
+					981D7B09B2DB233EB8BAD15A = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4FAC898E8E6F3EA2061956B9 /* Build configuration list for PBXProject "DFWGameDayRadio" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = A1291629ABF3B7A7A0ABEC11;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A60570A9B1BCCD5F3EC4D5AA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				53F056637D253ACF293BEDB8 /* DFWGameDayRadio */,
+				981D7B09B2DB233EB8BAD15A /* DFWGameDayRadioWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B8B3FE202285CBA14235E2DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BCA3B1FCB0AD83D79D603AC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		64599B2787C6C4EFA88F197B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEB4F6AC285B2D39FAACB261 /* AppDelegate.swift in Sources */,
+				97942F79F5BAD0922F4B0BCA /* AudioStreamManager.swift in Sources */,
+				AE4BA54240FEE8B015269DCE /* BaseballDiamondView.swift in Sources */,
+				A4808087D0F84F8F324360E4 /* BasketballCourtView.swift in Sources */,
+				C789864C5A1C31D05221CD84 /* CarPlaySceneDelegate.swift in Sources */,
+				C12CA78C61A8CADCD4658CE6 /* CarPlayTemplateManager.swift in Sources */,
+				103E5A0ADF85F8A97602F858 /* Constants.swift in Sources */,
+				D8A045F727464A7A9BDD0B72 /* ContentView.swift in Sources */,
+				7AFA3D1DE30CE0DADFE8A905 /* DFWGameDayRadioApp.swift in Sources */,
+				DC222C763D6033D27A473CC3 /* DallasTeam.swift in Sources */,
+				35BDF4B89EC4665D8CE3B09B /* ESPNResponse.swift in Sources */,
+				DCB54E740D471A6C923AC46E /* ESPNScoreService.swift in Sources */,
+				E0DC5335DB4A5A7A352FC1B3 /* FootballFieldView.swift in Sources */,
+				0614C59D3AEB80FCC235AD95 /* GameCoordinator.swift in Sources */,
+				A04610CE9D9C709881098D5F /* GameListView.swift in Sources */,
+				339E5232A4489B3490EE29BB /* GameScore.swift in Sources */,
+				2F2C2267BB82C08D89706B6C /* GameSituation.swift in Sources */,
+				D0A6CBCF24BFA019C4C56DB1 /* HockeyRinkView.swift in Sources */,
+				CC01A0FE8E9C540B26DDE912 /* LiveActivityManager.swift in Sources */,
+				4A6031EE2ACAB5624EFE9BF7 /* MLBResponse.swift in Sources */,
+				A2FE6F374BA40427E68DCB6D /* MLBScoreService.swift in Sources */,
+				AE4DEE5969AD8F67816F2B82 /* NBAResponse.swift in Sources */,
+				C382B5498FCE82B0425E8D9E /* NBAScoreService.swift in Sources */,
+				428348A6D578A17D2FC4058A /* NHLResponse.swift in Sources */,
+				C9D2C8F2E8C7442C872B485B /* NHLScoreService.swift in Sources */,
+				BEA4DBACADD811228C41D5EC /* RadioStation.swift in Sources */,
+				6C5B24D094EC662AA6567CEA /* ScoreActivityAttributes.swift in Sources */,
+				E3BC5882B0C143D2C1BD0D73 /* ScoreDelayQueue.swift in Sources */,
+				84CC31485D24C9052EE010A2 /* ScoreProvider.swift in Sources */,
+				BFBF5E0E4B2B4A839486D9F0 /* SettingsView.swift in Sources */,
+				5446AE76F740B9E2BBBB2F18 /* SituationView.swift in Sources */,
+				45918C7A121F4872F7CA2731 /* StationPickerView.swift in Sources */,
+				135319B36C32A12C4186FD6C /* StreamLatencyEstimator.swift in Sources */,
+				83F327AEF3D3DC3B271BF5BB /* UserDefaultsKeys.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9B0841AE0C1855BC9DBB707B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9D890B12C88352577C271CD0 /* BaseballDiamondView.swift in Sources */,
+				61D5074A5B3D8DF480E4DB76 /* BasketballCourtView.swift in Sources */,
+				B6164EC43E0BE61910D2AF19 /* DFWGameDayRadioWidgetBundle.swift in Sources */,
+				1D7BB6985A9FB0A5C255666B /* FootballFieldView.swift in Sources */,
+				C968A97E28920BEDBA530C5D /* GameSituation.swift in Sources */,
+				DB21FE559CDB3EC67FBAB455 /* HockeyRinkView.swift in Sources */,
+				7D2F69F22A5E3B965B07610A /* ScoreActivityAttributes.swift in Sources */,
+				3808F88200D47D4EFF171988 /* ScoreLiveActivity.swift in Sources */,
+				2EB05D31040B339A272A23D8 /* SituationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EFBEAA823D856F253BE384C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 981D7B09B2DB233EB8BAD15A /* DFWGameDayRadioWidget */;
+			targetProxy = D38AE1F195965C0C0E5CFF97 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8B960B61FC1595F5CEDD257F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DFWGameDayRadioWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.DFWGameDayRadio.ScoreWidget;
+				SDKROOT = iphoneos;
+				SUPPORTS_LIVE_ACTIVITIES = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A052390D1CDBE385559EE337 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DFWGameDayRadio/Resources/DFWGameDayRadio.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DFWGameDayRadio/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.DFWGameDayRadio;
+				SDKROOT = iphoneos;
+				SUPPORTS_LIVE_ACTIVITIES = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		D1922F03A3840B13E0DB5364 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		D45809450A04F6B9BC9D877B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		DDB9145869201EFC3FC8DBB3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DFWGameDayRadio/Resources/DFWGameDayRadio.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DFWGameDayRadio/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.DFWGameDayRadio;
+				SDKROOT = iphoneos;
+				SUPPORTS_LIVE_ACTIVITIES = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E79929CF01CF9A63AFE30FE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = DFWGameDayRadioWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.DFWGameDayRadio.ScoreWidget;
+				SDKROOT = iphoneos;
+				SUPPORTS_LIVE_ACTIVITIES = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0F7B708EADB2AC4A24145CCE /* Build configuration list for PBXNativeTarget "DFWGameDayRadio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDB9145869201EFC3FC8DBB3 /* Debug */,
+				A052390D1CDBE385559EE337 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2865DD37AAA1B7F76A0BB9AD /* Build configuration list for PBXNativeTarget "DFWGameDayRadioWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E79929CF01CF9A63AFE30FE3 /* Debug */,
+				8B960B61FC1595F5CEDD257F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4FAC898E8E6F3EA2061956B9 /* Build configuration list for PBXProject "DFWGameDayRadio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1922F03A3840B13E0DB5364 /* Debug */,
+				D45809450A04F6B9BC9D877B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0DEF21FD95F4CAE6070B08DD /* Project object */;
+}

@@ -7,6 +7,8 @@ struct BasketballCourtView: View {
     let awayTeam: String
     var compact: Bool = false
 
+    @ScaledMetric private var timeoutDotSize: CGFloat = 5
+
     var body: some View {
         if compact {
             compactLayout
@@ -63,10 +65,12 @@ struct BasketballCourtView: View {
                 ForEach(0..<total, id: \.self) { i in
                     Circle()
                         .fill(i < remaining ? Color.primary.opacity(0.7) : Color.secondary.opacity(0.2))
-                        .frame(width: 5, height: 5)
+                        .frame(width: timeoutDotSize, height: timeoutDotSize)
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(team) has \(remaining) timeouts remaining\(isBonus ? ", in the bonus" : "")")
     }
 
     private func bonusBadge(team: String) -> some View {

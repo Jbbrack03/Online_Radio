@@ -30,7 +30,15 @@ struct GameListView: View {
                     }
                 }
 
-                if let error = scoreService.lastError {
+                if !coordinator.activeErrors.isEmpty {
+                    Section("Status") {
+                        ForEach(coordinator.activeErrors, id: \.self) { error in
+                            Label(error, systemImage: "exclamationmark.triangle")
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
+                    }
+                } else if let error = scoreService.lastError {
                     Section("Status") {
                         Label(error, systemImage: "exclamationmark.triangle")
                             .font(.caption)
@@ -125,6 +133,7 @@ struct GameScoreCard: View {
             }
         }
         .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
         .listRowBackground(
             LinearGradient(
                 colors: [Color(hex: team.primaryColor).opacity(0.08), .clear],
@@ -142,6 +151,9 @@ struct TeamScoreColumn: View {
     let score: Int
     let isHome: Bool
 
+    @ScaledMetric(relativeTo: .title) private var logoSize: CGFloat = 32
+    @ScaledMetric(relativeTo: .largeTitle) private var scoreSize: CGFloat = 36
+
     var body: some View {
         VStack(spacing: 4) {
             // Team logo
@@ -152,12 +164,14 @@ struct TeamScoreColumn: View {
                     .font(.caption2.bold())
                     .foregroundStyle(.secondary)
             }
-            .frame(width: 32, height: 32)
+            .frame(width: logoSize, height: logoSize)
+            .accessibilityHidden(true)
 
             Text(abbreviation)
                 .font(.headline.bold())
             Text("\(score)")
-                .font(.system(size: 36, weight: .bold, design: .rounded))
+                .font(.system(size: scoreSize, weight: .bold, design: .rounded))
+                .minimumScaleFactor(0.6)
                 .contentTransition(.numericText())
             if isHome {
                 Text("HOME")
@@ -166,6 +180,8 @@ struct TeamScoreColumn: View {
             }
         }
         .frame(minWidth: 80)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(fullName), score \(score)\(isHome ? ", home team" : "")")
     }
 
     private var logoURL: URL? {
@@ -184,9 +200,10 @@ struct StatusBadge: View {
     var body: some View {
         HStack(spacing: 4) {
             if state == "in" {
-                Circle()
-                    .fill(.red)
-                    .frame(width: 8, height: 8)
+                Image(systemName: "circle.fill")
+                    .font(.system(size: 8))
+                    .foregroundStyle(.red)
+                    .symbolEffect(.pulse.byLayer)
                 Text("LIVE")
                     .font(.caption.bold())
                     .foregroundStyle(.red)
@@ -200,6 +217,8 @@ struct StatusBadge: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(state == "in" ? "Game is live" : state == "post" ? "Game is final" : detail)
     }
 }
 

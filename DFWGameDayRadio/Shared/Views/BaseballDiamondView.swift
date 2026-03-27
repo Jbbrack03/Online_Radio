@@ -5,6 +5,20 @@ struct BaseballDiamondView: View {
     let situation: BaseballSituation
     var compact: Bool = false
 
+    @ScaledMetric private var diamondSize: CGFloat = 60
+    @ScaledMetric private var compactDiamondSize: CGFloat = 32
+    @ScaledMetric private var dotSize: CGFloat = 8
+    @ScaledMetric private var compactDotSize: CGFloat = 6
+
+    private var baseRunnerDescription: String {
+        var runners: [String] = []
+        if situation.runnerOnFirst { runners.append("first") }
+        if situation.runnerOnSecond { runners.append("second") }
+        if situation.runnerOnThird { runners.append("third") }
+        if runners.isEmpty { return "Bases empty" }
+        return "Runners on \(runners.joined(separator: " and "))"
+    }
+
     var body: some View {
         if compact {
             compactLayout
@@ -19,7 +33,8 @@ struct BaseballDiamondView: View {
         VStack(spacing: 8) {
             HStack(spacing: 16) {
                 diamondGraphic
-                    .frame(width: 60, height: 60)
+                    .frame(width: diamondSize, height: diamondSize)
+                    .accessibilityLabel(baseRunnerDescription)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(situation.inningDisplay)
@@ -53,7 +68,8 @@ struct BaseballDiamondView: View {
     private var compactLayout: some View {
         HStack(spacing: 8) {
             diamondGraphic
-                .frame(width: 32, height: 32)
+                .frame(width: compactDiamondSize, height: compactDiamondSize)
+                .accessibilityLabel(baseRunnerDescription)
 
             VStack(alignment: .leading, spacing: 2) {
                 countDots
@@ -90,12 +106,6 @@ struct BaseballDiamondView: View {
                 ]
 
                 for (point, occupied) in bases {
-                    let baseRect = CGRect(
-                        x: point.x - baseSize / 2,
-                        y: point.y - baseSize / 2,
-                        width: baseSize,
-                        height: baseSize
-                    )
                     // Rotated square (diamond shape for each base)
                     let basePath = Path { path in
                         let half = baseSize / 2
@@ -131,7 +141,8 @@ struct BaseballDiamondView: View {
     // MARK: - Count and Outs
 
     private var countDots: some View {
-        HStack(spacing: 12) {
+        let currentDotSize = compact ? compactDotSize : dotSize
+        return HStack(spacing: 12) {
             HStack(spacing: 2) {
                 Text("B")
                     .font(.caption2.bold())
@@ -139,8 +150,11 @@ struct BaseballDiamondView: View {
                 ForEach(0..<4, id: \.self) { i in
                     Circle()
                         .fill(i < situation.balls ? Color.green : Color.secondary.opacity(0.3))
-                        .frame(width: compact ? 6 : 8, height: compact ? 6 : 8)
+                        .frame(width: currentDotSize, height: currentDotSize)
                 }
+                Text("\(situation.balls)")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.secondary)
             }
             HStack(spacing: 2) {
                 Text("S")
@@ -149,22 +163,33 @@ struct BaseballDiamondView: View {
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
                         .fill(i < situation.strikes ? Color.red : Color.secondary.opacity(0.3))
-                        .frame(width: compact ? 6 : 8, height: compact ? 6 : 8)
+                        .frame(width: currentDotSize, height: currentDotSize)
                 }
+                Text("\(situation.strikes)")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.secondary)
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(situation.balls) balls, \(situation.strikes) strikes")
     }
 
     private var outsDots: some View {
-        HStack(spacing: 2) {
+        let currentDotSize = compact ? compactDotSize : dotSize
+        return HStack(spacing: 2) {
             Text("O")
                 .font(.caption2.bold())
                 .foregroundStyle(.secondary)
             ForEach(0..<3, id: \.self) { i in
                 Circle()
                     .fill(i < situation.outs ? Color.orange : Color.secondary.opacity(0.3))
-                    .frame(width: compact ? 6 : 8, height: compact ? 6 : 8)
+                    .frame(width: currentDotSize, height: currentDotSize)
             }
+            Text("\(situation.outs)")
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(.secondary)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(situation.outs) outs")
     }
 }

@@ -83,3 +83,39 @@ enum ESPNImages {
         return URL(string: "\(teamLogo)/\(league)/500/\(abbreviation).png")
     }
 }
+
+// MARK: - Layout Constants
+
+import SwiftUI
+
+enum LayoutConstants {
+    // Team logos
+    static let logoSizeSmall: CGFloat = 32
+    static let logoSizeMedium: CGFloat = 36
+    static let logoSizeLarge: CGFloat = 52
+
+    // Score display
+    static let scoreFontSize: CGFloat = 36
+
+    // Sport situation indicators
+    static let indicatorDotSize: CGFloat = 8
+    static let indicatorDotSizeCompact: CGFloat = 6
+    static let fieldBarHeight: CGFloat = 24
+    static let ballMarkerSize: CGFloat = 12
+    static let shotsBarHeight: CGFloat = 8
+    static let timeoutDotSize: CGFloat = 5
+
+    // Spacing
+    static let cardVerticalPadding: CGFloat = 8
+    static let sectionSpacing: CGFloat = 12
+    static let itemSpacing: CGFloat = 8
+    static let tightSpacing: CGFloat = 4
+    static let dotSpacing: CGFloat = 2
+
+    // Live indicator
+    static let liveIndicatorSize: CGFloat = 8
+    static let liveIndicatorSizeSmall: CGFloat = 6
+
+    // CarPlay
+    static let carPlayLogoSize: CGFloat = 44
+}

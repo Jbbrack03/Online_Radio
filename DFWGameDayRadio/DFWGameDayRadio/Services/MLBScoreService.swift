@@ -80,7 +80,9 @@ class MLBScoreService: ScoreProvider {
         guard let url = URL(string: urlString) else { return }
 
         do {
+            let startTime = Date()
             let (data, _) = try await session.data(from: url)
+            StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
             let feed = try JSONDecoder().decode(MLBLiveFeed.self, from: data)
             let score = mapToGameScore(feed: feed, gamePk: gamePk)
             await MainActor.run {

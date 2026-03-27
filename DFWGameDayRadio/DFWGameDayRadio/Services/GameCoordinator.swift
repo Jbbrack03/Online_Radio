@@ -15,6 +15,7 @@ class GameCoordinator {
     private let latencyEstimator = StreamLatencyEstimator.shared
     private var feedTimer: Timer?
     private var activeProviders: [DallasTeam: ScoreProvider] = [:]
+    private var wasPlaying = false
 
     private init() {}
 
@@ -59,6 +60,24 @@ class GameCoordinator {
     // MARK: - Score State
 
     var delayedScores: [DallasTeam: GameScore] { delayQueue.delayedScores }
+
+    /// Aggregate errors from all active providers.
+    var activeErrors: [String] {
+        var errors: [String] = []
+        var seen = Set<ObjectIdentifier>()
+        for (_, provider) in activeProviders {
+            let id = ObjectIdentifier(provider)
+            guard !seen.contains(id) else { continue }
+            seen.insert(id)
+            if let error = provider.lastError {
+                errors.append(error)
+            }
+        }
+        if let audioErr = audioError {
+            errors.append(audioErr)
+        }
+        return errors
+    }
 
     /// Aggregate active games from all active providers.
     var activeGames: [DallasTeam: GameScore] {
@@ -113,8 +132,21 @@ class GameCoordinator {
 
         // Feed scores from all providers into the delay queue
         feedTimer?.invalidate()
+        wasPlaying = true
         feedTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
             guard let self else { return }
+
+            // Sync delay queue with audio play state
+            let playing = self.audioManager.isPlaying
+            if playing != self.wasPlaying {
+                self.wasPlaying = playing
+                if playing {
+                    self.delayQueue.startProcessing()
+                } else {
+                    self.delayQueue.stopProcessing()
+                }
+            }
+
             for team in teams {
                 if let provider = self.activeProviders[team],
                    let score = provider.activeGames[team] {

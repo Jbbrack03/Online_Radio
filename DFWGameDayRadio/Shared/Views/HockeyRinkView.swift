@@ -5,6 +5,8 @@ struct HockeyRinkView: View {
     let situation: HockeySituation
     var compact: Bool = false
 
+    @ScaledMetric private var shotsBarHeight: CGFloat = 8
+
     var body: some View {
         if compact {
             compactLayout
@@ -21,17 +23,17 @@ struct HockeyRinkView: View {
             if situation.powerPlay {
                 HStack(spacing: 6) {
                     Image(systemName: "bolt.fill")
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(.orange)
                         .font(.caption)
                     Text("Power Play")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(.orange)
                     if let team = situation.powerPlayTeam {
                         Text(team)
                             .font(.caption.bold())
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.yellow.opacity(0.2))
+                            .background(.orange.opacity(0.2))
                             .clipShape(Capsule())
                     }
                     if let time = situation.powerPlayTimeRemaining, !time.isEmpty {
@@ -40,10 +42,14 @@ struct HockeyRinkView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Power play, \(situation.powerPlayTeam ?? "unknown team")")
             }
 
             // Shots on goal
             shotsBar
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Shots on goal: away \(situation.shotsAway), home \(situation.shotsHome)")
         }
     }
 
@@ -54,11 +60,11 @@ struct HockeyRinkView: View {
             if situation.powerPlay {
                 HStack(spacing: 2) {
                     Image(systemName: "bolt.fill")
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(.orange)
                         .font(.caption2)
                     Text("PP")
                         .font(.caption2.bold())
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(.orange)
                 }
             }
             Text(situation.shotsDisplay)
@@ -93,7 +99,7 @@ struct HockeyRinkView: View {
                         .frame(width: max(awayWidth, 2))
                 }
             }
-            .frame(height: 8)
+            .frame(height: shotsBarHeight)
 
             HStack {
                 Text("\(situation.shotsAway)")

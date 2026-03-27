@@ -135,7 +135,7 @@ class CarPlayTemplateManager {
                     let (data, _) = try await URLSession.shared.data(from: url)
                     if let image = UIImage(data: data) {
                         // Scale to appropriate CarPlay size
-                        let size = CGSize(width: 44, height: 44)
+                        let size = CGSize(width: LayoutConstants.carPlayLogoSize, height: LayoutConstants.carPlayLogoSize)
                         let renderer = UIGraphicsImageRenderer(size: size)
                         let scaled = renderer.image { _ in
                             image.draw(in: CGRect(origin: .zero, size: size))
@@ -147,7 +147,7 @@ class CarPlayTemplateManager {
                         }
                     }
                 } catch {
-                    // Silently fall back to SF Symbol
+                    print("[CarPlay] Logo fetch failed for \(station.displayName): \(error.localizedDescription)")
                 }
             }
         }

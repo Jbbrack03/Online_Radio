@@ -29,6 +29,8 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
         TARGETED_DEVICE_FAMILY: "1"  # iPhone only
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
     entitlements:
       path: DFWGameDayRadio/Resources/DFWGameDayRadio.entitlements
     dependencies:
@@ -52,3 +54,5 @@ targets:
         SUPPORTS_LIVE_ACTIVITIES: "YES"
         CODE_SIGN_STYLE: Automatic
         TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"

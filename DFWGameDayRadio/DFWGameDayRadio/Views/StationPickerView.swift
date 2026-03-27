@@ -34,12 +34,15 @@ struct StationRow: View {
     let isBuffering: Bool
     let onTap: () -> Void
 
+    @ScaledMetric(relativeTo: .body) private var logoAreaWidth: CGFloat = 52
+    @ScaledMetric(relativeTo: .body) private var logoSize: CGFloat = 36
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
                 // Team logos
                 teamLogos
-                    .frame(width: 52)
+                    .frame(width: logoAreaWidth)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(station.displayName)
@@ -68,6 +71,9 @@ struct StationRow: View {
             .padding(.vertical, 6)
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(station.displayName), \(station.teams.map(\.shortName).joined(separator: " and "))\(isPlaying ? ", now playing" : isBuffering ? ", loading" : "")")
+        .accessibilityAddTraits(.isButton)
         .listRowBackground(
             isActive ? stationGradient : nil
         )
@@ -83,7 +89,7 @@ struct StationRow: View {
                         .font(.title2)
                         .foregroundStyle(.secondary)
                 }
-                .frame(width: 36, height: 36)
+                .frame(width: logoSize, height: logoSize)
                 .offset(x: station.teams.count > 1 ? CGFloat(index * 16 - 8) : 0)
             }
         }
@@ -101,6 +107,7 @@ struct StationRow: View {
 
 struct NowPlayingBar: View {
     @State private var coordinator = GameCoordinator.shared
+    @ScaledMetric private var miniLogoSize: CGFloat = 32
 
     var body: some View {
         if let station = coordinator.currentStation {
@@ -115,7 +122,8 @@ struct NowPlayingBar: View {
                             Image(systemName: "radio")
                                 .foregroundStyle(.secondary)
                         }
-                        .frame(width: 32, height: 32)
+                        .frame(width: miniLogoSize, height: miniLogoSize)
+                        .accessibilityHidden(true)
                     }
 
                     VStack(alignment: .leading, spacing: 2) {
@@ -136,12 +144,14 @@ struct NowPlayingBar: View {
                         Image(systemName: coordinator.isPlaying ? "pause.fill" : "play.fill")
                             .font(.title2)
                     }
+                    .accessibilityLabel(coordinator.isPlaying ? "Pause" : "Play")
 
                     Button(action: { coordinator.stopPlayback() }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.secondary)
                     }
+                    .accessibilityLabel("Stop playback")
                 }
                 .padding()
                 .background(.ultraThinMaterial)

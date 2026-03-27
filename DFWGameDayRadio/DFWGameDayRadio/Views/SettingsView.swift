@@ -52,6 +52,8 @@ struct SettingsView: View {
                         Text("+15")
                             .font(.caption2)
                     }
+                    .accessibilityLabel("Fine-tune delay offset")
+                    .accessibilityValue("\(Int(offsetValue)) seconds")
                     .onChange(of: offsetValue) { _, newValue in
                         delayQueue.userOffset = newValue
                     }
@@ -118,35 +120,20 @@ struct SettingsView: View {
 
     private var stationsSection: some View {
         Section {
-            HStack {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                VStack(alignment: .leading) {
-                    Text("105.3 The Fan")
-                        .font(.subheadline.bold())
-                    Text("Cowboys, Rangers")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            ForEach(RadioStation.allCases) { station in
+                HStack {
+                    Image(systemName: "antenna.radiowaves.left.and.right")
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading) {
+                        Text(station.displayName)
+                            .font(.subheadline.bold())
+                        Text(station.teams.map(\.shortName).joined(separator: ", "))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-            }
-            HStack {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                VStack(alignment: .leading) {
-                    Text("97.1 The Eagle")
-                        .font(.subheadline.bold())
-                    Text("Mavericks")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            HStack {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                VStack(alignment: .leading) {
-                    Text("96.7 The Ticket")
-                        .font(.subheadline.bold())
-                    Text("Stars")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(station.displayName), \(station.callSign), teams: \(station.teams.map(\.shortName).joined(separator: " and "))")
             }
         } header: {
             Text("Stations")

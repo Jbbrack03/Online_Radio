@@ -40,6 +40,7 @@ class StreamLatencyEstimator {
     private var probeObservation: NSKeyValueObservation?
     private var probeTimeoutTask: Task<Void, Never>?
     private var apiLatencySamples: [TimeInterval] = []
+    private var lastProbeTime: [RadioStation: Date] = [:]
 
     private init() {
         loadCachedLatencies()
@@ -49,8 +50,10 @@ class StreamLatencyEstimator {
 
     /// Start probing the station's stream latency. Non-blocking — results update `estimatedLatency` asynchronously.
     func probe(station: RadioStation) {
-        // If we already have an HLS probe result for this station, skip
-        if estimateSource[station] == .hlsProbe { return }
+        // Skip if we have a recent successful HLS probe (re-probe every 5 minutes)
+        if estimateSource[station] == .hlsProbe,
+           let lastProbe = lastProbeTime[station],
+           Date().timeIntervalSince(lastProbe) < 300 { return }
 
         guard let hlsURLString = station.hlsFallbackURL,
               let hlsURL = URL(string: hlsURLString) else {
@@ -146,6 +149,7 @@ class StreamLatencyEstimator {
             if latency > 0 && latency < 300 {
                 estimatedLatency[station] = latency
                 estimateSource[station] = .hlsProbe
+                lastProbeTime[station] = Date()
                 cacheLatency(latency, for: station)
             }
         } else {

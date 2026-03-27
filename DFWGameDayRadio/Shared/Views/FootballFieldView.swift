@@ -5,6 +5,9 @@ struct FootballFieldView: View {
     let situation: FootballSituation
     var compact: Bool = false
 
+    @ScaledMetric private var barHeight: CGFloat = 24
+    @ScaledMetric private var markerSize: CGFloat = 12
+
     var body: some View {
         if compact {
             compactLayout
@@ -23,7 +26,9 @@ struct FootballFieldView: View {
 
             // Field position bar
             fieldBar
-                .frame(height: 24)
+                .frame(height: barHeight)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Ball at the \(situation.yardLine) yard line")
 
             if let lastPlay = situation.lastPlay, !lastPlay.isEmpty {
                 Text(lastPlay)
@@ -68,14 +73,14 @@ struct FootballFieldView: View {
                 ForEach(1..<10, id: \.self) { i in
                     let x = width * CGFloat(i) / 10.0
                     Rectangle()
-                        .fill(Color.white.opacity(0.3))
+                        .fill(Color.primary.opacity(0.15))
                         .frame(width: 1, height: height)
                         .offset(x: x)
                 }
 
                 // 50 yard line
                 Rectangle()
-                    .fill(Color.white.opacity(0.6))
+                    .fill(Color.primary.opacity(0.3))
                     .frame(width: 2, height: height)
                     .offset(x: width / 2)
 
@@ -83,7 +88,7 @@ struct FootballFieldView: View {
                 let yardPosition = CGFloat(situation.yardLine) / 100.0
                 Circle()
                     .fill(Color.orange)
-                    .frame(width: 12, height: 12)
+                    .frame(width: markerSize, height: markerSize)
                     .shadow(color: .orange.opacity(0.5), radius: 3)
                     .offset(x: width * yardPosition - 6)
 

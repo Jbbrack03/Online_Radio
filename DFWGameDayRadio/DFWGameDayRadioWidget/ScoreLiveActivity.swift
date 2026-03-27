@@ -28,9 +28,14 @@ struct ScoreLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.center) {
                     VStack(spacing: 2) {
                         if context.state.gameState == "in" {
-                            Circle()
-                                .fill(.red)
-                                .frame(width: 6, height: 6)
+                            HStack(spacing: 2) {
+                                Circle()
+                                    .fill(.red)
+                                    .frame(width: 6, height: 6)
+                                Text("LIVE")
+                                    .font(.system(size: 8, weight: .bold))
+                                    .foregroundStyle(.red)
+                            }
                         }
                         Text(context.state.gameClockDisplay)
                             .font(.caption2.bold())
@@ -104,9 +109,14 @@ struct ScoreLiveActivity: Widget {
                 // Center: game info
                 VStack(spacing: 4) {
                     if context.state.gameState == "in" {
-                        Circle()
-                            .fill(.red)
-                            .frame(width: 8, height: 8)
+                        HStack(spacing: 3) {
+                            Circle()
+                                .fill(.red)
+                                .frame(width: 8, height: 8)
+                            Text("LIVE")
+                                .font(.caption2.bold())
+                                .foregroundStyle(.red)
+                        }
                     }
                     Text(context.state.gameClockDisplay)
                         .font(.subheadline.bold())
