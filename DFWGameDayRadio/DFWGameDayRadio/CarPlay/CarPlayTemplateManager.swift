@@ -1,10 +1,13 @@
 import CarPlay
+import MediaPlayer
 import UIKit
 
 class CarPlayTemplateManager {
     weak var interfaceController: CPInterfaceController?
 
-    private let audioManager = AudioStreamManager.shared
+    private let coordinator = GameCoordinator.shared
+    private var logoCache: [String: UIImage] = [:]
+    private var scoreUpdateTimer: Timer?
 
     func buildRootTemplate() -> CPTabBarTemplate {
         let stationsTab = buildStationsTemplate()
@@ -13,9 +16,19 @@ class CarPlayTemplateManager {
         stationsTab.tabImage = UIImage(systemName: "radio")
         nowPlayingTab.tabImage = UIImage(systemName: "music.note")
 
+        // Configure Now Playing template with custom buttons
+        configureNowPlaying()
+
         let tabBar = CPTabBarTemplate(templates: [stationsTab, nowPlayingTab])
         return tabBar
     }
+
+    func tearDown() {
+        scoreUpdateTimer?.invalidate()
+        scoreUpdateTimer = nil
+    }
+
+    // MARK: - Stations List
 
     private func buildStationsTemplate() -> CPListTemplate {
         let items = RadioStation.allCases.map { station -> CPListItem in
@@ -27,8 +40,8 @@ class CarPlayTemplateManager {
             )
 
             item.handler = { [weak self] _, completion in
-                self?.audioManager.play(station: station)
-                self?.startScoreTracking(for: station)
+                self?.coordinator.playAndTrack(station: station)
+                self?.startScoreMetadataUpdates()
                 completion()
 
                 // Navigate to Now Playing
@@ -38,7 +51,7 @@ class CarPlayTemplateManager {
             }
 
             // Show "Now Playing" indicator
-            if audioManager.currentStation == station {
+            if coordinator.currentStation == station {
                 item.isPlaying = true
             }
 
@@ -48,21 +61,93 @@ class CarPlayTemplateManager {
         let section = CPListSection(items: items, header: "Dallas Sports Radio", sectionIndexTitle: nil)
         let template = CPListTemplate(title: "Stations", sections: [section])
         template.tabTitle = "Stations"
+
+        // Pre-fetch team logos asynchronously and update list items
+        prefetchLogos(for: items)
+
         return template
     }
 
-    private func startScoreTracking(for station: RadioStation) {
-        let teams = station.teams
-        ESPNScoreService.shared.startPolling(for: teams)
-        ScoreDelayQueue.shared.startProcessing()
+    // MARK: - Now Playing Configuration
 
-        // Start live activities for any active games
-        Task {
-            // Give ESPN a moment to fetch
-            try? await Task.sleep(for: .seconds(2))
-            for team in teams {
-                if let score = ESPNScoreService.shared.activeGames[team], score.isLive {
-                    LiveActivityManager.shared.startActivity(for: team, score: score, station: station)
+    private func configureNowPlaying() {
+        let nowPlaying = CPNowPlayingTemplate.shared
+
+        // Custom buttons: delay adjustment
+        let delayMinusImage = UIImage(systemName: "minus.circle") ?? UIImage()
+        let delayPlusImage = UIImage(systemName: "plus.circle") ?? UIImage()
+
+        let delayMinus = CPNowPlayingImageButton(image: delayMinusImage) { _ in
+            let queue = ScoreDelayQueue.shared
+            queue.userOffset = max(-15, queue.userOffset - 5)
+        }
+
+        let delayPlus = CPNowPlayingImageButton(image: delayPlusImage) { _ in
+            let queue = ScoreDelayQueue.shared
+            queue.userOffset = min(15, queue.userOffset + 5)
+        }
+
+        nowPlaying.updateNowPlayingButtons([delayMinus, delayPlus])
+    }
+
+    // MARK: - Score Metadata Updates
+
+    /// Periodically update MPNowPlayingInfoCenter with current score for display on CarPlay.
+    func startScoreMetadataUpdates() {
+        scoreUpdateTimer?.invalidate()
+        scoreUpdateTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            self?.updateNowPlayingWithScore()
+        }
+        // Also update immediately
+        updateNowPlayingWithScore()
+    }
+
+    private func updateNowPlayingWithScore() {
+        guard let station = coordinator.currentStation else { return }
+
+        var scoreParts: [String] = []
+        for team in station.teams {
+            if let score = coordinator.delayedScores[team] {
+                scoreParts.append(score.scoreLine)
+                if score.isLive {
+                    scoreParts.append("| \(score.statusDetail)")
+                }
+            }
+        }
+
+        if !scoreParts.isEmpty {
+            var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+            info[MPMediaItemPropertyArtist] = scoreParts.joined(separator: " ")
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        }
+    }
+
+    // MARK: - Logo Prefetch
+
+    private func prefetchLogos(for items: [CPListItem]) {
+        let stations = RadioStation.allCases
+        for (index, station) in stations.enumerated() {
+            guard let team = station.teams.first,
+                  let url = team.logoURL else { continue }
+
+            Task {
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    if let image = UIImage(data: data) {
+                        // Scale to appropriate CarPlay size
+                        let size = CGSize(width: 44, height: 44)
+                        let renderer = UIGraphicsImageRenderer(size: size)
+                        let scaled = renderer.image { _ in
+                            image.draw(in: CGRect(origin: .zero, size: size))
+                        }
+                        await MainActor.run {
+                            if index < items.count {
+                                items[index].setImage(scaled)
+                            }
+                        }
+                    }
+                } catch {
+                    // Silently fall back to SF Symbol
                 }
             }
         }

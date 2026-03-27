@@ -39,6 +39,14 @@ enum RadioStation: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    var hlsFallbackURL: String? {
+        switch self {
+        case .theFan: return StreamURL.krldFM_HLS
+        case .theEagle: return StreamURL.keglFM_HLS
+        case .theTicket: return StreamURL.ktckAM_HLS
+        }
+    }
+
     var teams: [DallasTeam] {
         switch self {
         case .theFan: return [.cowboys, .rangers]

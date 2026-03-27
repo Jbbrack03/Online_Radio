@@ -2,92 +2,173 @@ import SwiftUI
 
 struct SettingsView: View {
     @State private var delayQueue = ScoreDelayQueue.shared
-    @State private var delayValue: Double = ScoreDelayQueue.shared.delaySeconds
+    @State private var latencyEstimator = StreamLatencyEstimator.shared
+    @State private var offsetValue: Double = ScoreDelayQueue.shared.userOffset
 
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Score Delay")
-                                .font(.headline)
-                            Spacer()
-                            Text("\(Int(delayValue))s")
-                                .font(.title2.bold().monospacedDigit())
-                                .foregroundStyle(.blue)
-                        }
-
-                        Slider(value: $delayValue, in: 0...60, step: 1) {
-                            Text("Delay")
-                        } minimumValueLabel: {
-                            Text("0s")
-                                .font(.caption)
-                        } maximumValueLabel: {
-                            Text("60s")
-                                .font(.caption)
-                        }
-                        .onChange(of: delayValue) { _, newValue in
-                            delayQueue.delaySeconds = newValue
-                        }
-
-                        Text("Delays score updates to match your radio broadcast. Typical radio delay is 10-20 seconds behind real-time.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.vertical, 4)
-                } header: {
-                    Text("Broadcast Sync")
-                }
-
-                Section {
-                    HStack {
-                        Image(systemName: "antenna.radiowaves.left.and.right")
-                        VStack(alignment: .leading) {
-                            Text("105.3 The Fan")
-                                .font(.subheadline.bold())
-                            Text("Cowboys, Rangers")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    HStack {
-                        Image(systemName: "antenna.radiowaves.left.and.right")
-                        VStack(alignment: .leading) {
-                            Text("97.1 The Eagle")
-                                .font(.subheadline.bold())
-                            Text("Mavericks")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    HStack {
-                        Image(systemName: "antenna.radiowaves.left.and.right")
-                        VStack(alignment: .leading) {
-                            Text("96.7 The Ticket")
-                                .font(.subheadline.bold())
-                            Text("Stars")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                } header: {
-                    Text("Stations")
-                } footer: {
-                    Text("Station-to-team mappings for automatic score tracking.")
-                }
-
-                Section {
-                    LabeledContent("ESPN Polling", value: "Every 10s")
-                    LabeledContent("Score Source", value: "ESPN Scoreboard API")
-                    LabeledContent("Live Activity", value: "Delayed scores")
-                } header: {
-                    Text("About")
-                } footer: {
-                    Text("Scores are fetched from ESPN and held for the configured delay before displaying on the Live Activity and in-app.")
-                }
+                broadcastSyncSection
+                stationLatencySection
+                stationsSection
+                aboutSection
             }
             .navigationTitle("Settings")
+        }
+    }
+
+    // MARK: - Broadcast Sync
+
+    private var broadcastSyncSection: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 12) {
+                // Current effective delay
+                HStack {
+                    Text("Effective Delay")
+                        .font(.headline)
+                    Spacer()
+                    Text("\(Int(delayQueue.effectiveDelaySeconds))s")
+                        .font(.title2.bold().monospacedDigit())
+                        .foregroundStyle(.blue)
+                }
+
+                // Fine-tune slider
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Fine-Tune Offset")
+                            .font(.subheadline)
+                        Spacer()
+                        Text(offsetLabel)
+                            .font(.subheadline.bold().monospacedDigit())
+                            .foregroundStyle(offsetValue == 0 ? Color.secondary : Color.orange)
+                    }
+
+                    Slider(value: $offsetValue, in: -15...15, step: 1) {
+                        Text("Offset")
+                    } minimumValueLabel: {
+                        Text("-15")
+                            .font(.caption2)
+                    } maximumValueLabel: {
+                        Text("+15")
+                            .font(.caption2)
+                    }
+                    .onChange(of: offsetValue) { _, newValue in
+                        delayQueue.userOffset = newValue
+                    }
+                }
+
+                Text("The app auto-estimates stream delay per station. Use the offset slider to fine-tune if scores appear too early or late.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 4)
+        } header: {
+            Text("Broadcast Sync")
+        }
+    }
+
+    private var offsetLabel: String {
+        if offsetValue == 0 {
+            return "0s"
+        } else if offsetValue > 0 {
+            return "+\(Int(offsetValue))s"
+        } else {
+            return "\(Int(offsetValue))s"
+        }
+    }
+
+    // MARK: - Per-Station Latency
+
+    private var stationLatencySection: some View {
+        Section {
+            ForEach(RadioStation.allCases) { station in
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(station.displayName)
+                            .font(.subheadline.bold())
+                        if let source = latencyEstimator.estimateSource[station] {
+                            Text(source.rawValue)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Spacer()
+
+                    if let latency = latencyEstimator.estimatedLatency[station] {
+                        Text("~\(Int(latency))s")
+                            .font(.subheadline.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if latencyEstimator.isProbing && delayQueue.currentStation == station {
+                        ProgressView()
+                            .scaleEffect(0.7)
+                    }
+                }
+            }
+        } header: {
+            Text("Estimated Stream Delay")
+        } footer: {
+            Text("Auto-detected latency for each station's internet stream behind the live broadcast.")
+        }
+    }
+
+    // MARK: - Stations
+
+    private var stationsSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                VStack(alignment: .leading) {
+                    Text("105.3 The Fan")
+                        .font(.subheadline.bold())
+                    Text("Cowboys, Rangers")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            HStack {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                VStack(alignment: .leading) {
+                    Text("97.1 The Eagle")
+                        .font(.subheadline.bold())
+                    Text("Mavericks")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            HStack {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                VStack(alignment: .leading) {
+                    Text("96.7 The Ticket")
+                        .font(.subheadline.bold())
+                    Text("Stars")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        } header: {
+            Text("Stations")
+        } footer: {
+            Text("Station-to-team mappings for automatic score tracking.")
+        }
+    }
+
+    // MARK: - About
+
+    private var aboutSection: some View {
+        Section {
+            LabeledContent("Score Polling", value: "Every 10s")
+            LabeledContent("NFL Source", value: "ESPN")
+            LabeledContent("MLB Source", value: "MLB Stats API")
+            LabeledContent("NBA Source", value: "NBA CDN")
+            LabeledContent("NHL Source", value: "NHL API")
+            LabeledContent("Live Activity", value: "Delayed scores")
+        } header: {
+            Text("About")
+        } footer: {
+            Text("Scores are fetched from league-native APIs and held for the estimated delay before displaying on Live Activities and in-app.")
         }
     }
 }

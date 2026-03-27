@@ -78,4 +78,26 @@ enum DallasTeam: String, CaseIterable, Identifiable, Codable {
         case .stars: return "#006847"
         }
     }
+
+    var espnLeague: String {
+        switch self {
+        case .cowboys: return "nfl"
+        case .rangers: return "mlb"
+        case .mavericks: return "nba"
+        case .stars: return "nhl"
+        }
+    }
+
+    var espnAbbreviation: String {
+        switch self {
+        case .cowboys: return "dal"
+        case .rangers: return "tex"
+        case .mavericks: return "dal"
+        case .stars: return "dal"
+        }
+    }
+
+    var logoURL: URL? {
+        ESPNImages.teamLogoURL(league: espnLeague, abbreviation: espnAbbreviation, size: 100)
+    }
 }

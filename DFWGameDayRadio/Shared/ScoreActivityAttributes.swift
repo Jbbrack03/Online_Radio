@@ -15,5 +15,6 @@ struct ScoreActivityAttributes: ActivityAttributes {
         let gameClockDisplay: String
         let gameState: String
         let statusDetail: String
+        let situation: GameSituation?
     }
 }

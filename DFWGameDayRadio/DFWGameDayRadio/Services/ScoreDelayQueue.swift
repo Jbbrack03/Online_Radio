@@ -5,16 +5,32 @@ class ScoreDelayQueue {
     static let shared = ScoreDelayQueue()
 
     var delayedScores: [DallasTeam: GameScore] = [:]
-    var delaySeconds: TimeInterval {
-        get { UserDefaults.standard.double(forKey: UserDefaultsKeys.scoreDelay).clamped(to: 0...60) }
-        set { UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.scoreDelay) }
+    var currentStation: RadioStation?
+
+    /// User's fine-tune offset (can be negative or positive).
+    var userOffset: TimeInterval {
+        get { UserDefaults.standard.double(forKey: UserDefaultsKeys.userDelayOffset) }
+        set { UserDefaults.standard.set(newValue, forKey: UserDefaultsKeys.userDelayOffset) }
+    }
+
+    /// The effective delay being applied right now (computed from estimator + user offset).
+    var effectiveDelaySeconds: TimeInterval {
+        guard let station = currentStation else {
+            return legacyDelaySeconds
+        }
+        return StreamLatencyEstimator.shared.effectiveDelay(for: station, userOffset: userOffset)
+    }
+
+    /// Legacy manual delay for backward compatibility (used when no station is set).
+    private var legacyDelaySeconds: TimeInterval {
+        UserDefaults.standard.double(forKey: UserDefaultsKeys.scoreDelay).clamped(to: 0...60)
     }
 
     private var queues: [DallasTeam: [DelayedScoreEvent]] = [:]
     private var timer: Timer?
 
     private init() {
-        // Set default delay if not configured
+        // Set default delay if not configured (legacy)
         if UserDefaults.standard.object(forKey: UserDefaultsKeys.scoreDelay) == nil {
             UserDefaults.standard.set(15.0, forKey: UserDefaultsKeys.scoreDelay)
         }
@@ -52,11 +68,12 @@ class ScoreDelayQueue {
     func clear() {
         queues.removeAll()
         delayedScores.removeAll()
+        currentStation = nil
     }
 
     private func processQueues() {
         let now = Date()
-        let delay = delaySeconds
+        let delay = effectiveDelaySeconds
 
         for team in queues.keys {
             while let first = queues[team]?.first,

@@ -1,7 +1,7 @@
 import Foundation
 
 @Observable
-class ESPNScoreService {
+class ESPNScoreService: ScoreProvider {
     static let shared = ESPNScoreService()
 
     var activeGames: [DallasTeam: GameScore] = [:]
@@ -75,6 +75,54 @@ class ESPNScoreService {
         }
     }
 
+    /// Extract NFL situation data from ESPN's competition.situation field.
+    private func extractSituation(from event: ESPNEvent) -> GameSituation? {
+        guard let competition = event.competitions.first,
+              let situation = competition.situation,
+              event.status.type.state == "in" else {
+            return nil
+        }
+
+        // Parse "3rd & 7 at DAL 45" format
+        if let downText = situation.downDistanceText {
+            let parts = parseDownDistance(downText)
+            return .football(FootballSituation(
+                down: parts.down,
+                distance: parts.distance,
+                yardLine: parts.yardLine,
+                possession: situation.possessionText ?? "",
+                lastPlay: situation.lastPlay?.text
+            ))
+        }
+        return nil
+    }
+
+    private func parseDownDistance(_ text: String) -> (down: Int, distance: Int, yardLine: Int) {
+        // Expected format: "3rd & 7 at DAL 45" or "1st & 10 at 50"
+        var down = 0, distance = 0, yardLine = 0
+
+        let lowered = text.lowercased()
+        if lowered.hasPrefix("1st") { down = 1 }
+        else if lowered.hasPrefix("2nd") { down = 2 }
+        else if lowered.hasPrefix("3rd") { down = 3 }
+        else if lowered.hasPrefix("4th") { down = 4 }
+
+        // Extract distance after "& "
+        if let ampIdx = text.range(of: "& ") {
+            let afterAmp = text[ampIdx.upperBound...]
+            let distStr = afterAmp.prefix(while: { $0.isNumber })
+            distance = Int(distStr) ?? 0
+        }
+
+        // Extract yard line (last number in string)
+        let numbers = text.split(separator: " ").compactMap { Int($0) }
+        if let last = numbers.last {
+            yardLine = last
+        }
+
+        return (down, distance, yardLine)
+    }
+
     private func findGame(for team: DallasTeam, in scoreboard: ESPNScoreboard) -> GameScore? {
         for event in scoreboard.events {
             let competitors = event.competitions.first?.competitors ?? []
@@ -85,6 +133,7 @@ class ESPNScoreService {
                       let away = event.awayCompetitor else { continue }
 
                 let statusDetail = event.status.type.shortDetail ?? event.status.type.detail ?? ""
+                let situation = extractSituation(from: event)
 
                 return GameScore(
                     eventID: event.id,
@@ -97,7 +146,8 @@ class ESPNScoreService {
                     period: event.status.period ?? 0,
                     displayClock: event.status.displayClock ?? "",
                     state: event.status.type.state,
-                    statusDetail: statusDetail
+                    statusDetail: statusDetail,
+                    situation: situation
                 )
             }
         }

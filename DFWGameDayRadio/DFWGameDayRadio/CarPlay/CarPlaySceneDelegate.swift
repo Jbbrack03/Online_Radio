@@ -14,6 +14,11 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
 
         let rootTemplate = templateManager.buildRootTemplate()
         interfaceController.setRootTemplate(rootTemplate, animated: true, completion: nil)
+
+        // If audio is already playing, start score metadata updates
+        if GameCoordinator.shared.isPlaying {
+            templateManager.startScoreMetadataUpdates()
+        }
     }
 
     func templateApplicationScene(
@@ -22,5 +27,6 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     ) {
         self.interfaceController = nil
         templateManager.interfaceController = nil
+        templateManager.tearDown()
     }
 }

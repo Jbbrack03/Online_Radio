@@ -1,14 +1,15 @@
 import SwiftUI
 
 struct GameListView: View {
-    @State private var scoreService = ESPNScoreService.shared
-    @State private var delayQueue = ScoreDelayQueue.shared
+    @State private var coordinator = GameCoordinator.shared
     @State private var isLoading = false
+
+    private var scoreService: ESPNScoreService { ESPNScoreService.shared }
 
     var body: some View {
         NavigationStack {
             List {
-                if scoreService.activeGames.isEmpty && !isLoading {
+                if coordinator.activeGames.isEmpty && scoreService.activeGames.isEmpty && !isLoading {
                     ContentUnavailableView(
                         "No Games Today",
                         systemImage: "sportscourt",
@@ -17,11 +18,13 @@ struct GameListView: View {
                 }
 
                 ForEach(DallasTeam.allCases) { team in
-                    if let realtimeScore = scoreService.activeGames[team] {
-                        let delayedScore = delayQueue.delayedScores[team]
+                    let delayedScore = coordinator.delayedScores[team]
+                    let realtimeScore = coordinator.activeGames[team] ?? scoreService.activeGames[team]
+
+                    if let displayScore = delayedScore ?? realtimeScore {
                         GameScoreCard(
                             team: team,
-                            displayScore: delayedScore ?? realtimeScore,
+                            displayScore: displayScore,
                             isDelayed: delayedScore != nil
                         )
                     }
@@ -42,7 +45,7 @@ struct GameListView: View {
                 isLoading = false
             }
             .onAppear {
-                if scoreService.activeGames.isEmpty {
+                if coordinator.activeGames.isEmpty && scoreService.activeGames.isEmpty {
                     isLoading = true
                     Task {
                         await scoreService.fetchAllScores()
@@ -84,6 +87,7 @@ struct GameScoreCard: View {
             // Score
             HStack {
                 TeamScoreColumn(
+                    team: team,
                     abbreviation: displayScore.awayTeam,
                     fullName: displayScore.awayTeamFull,
                     score: displayScore.awayScore,
@@ -102,18 +106,37 @@ struct GameScoreCard: View {
                 Spacer()
 
                 TeamScoreColumn(
+                    team: team,
                     abbreviation: displayScore.homeTeam,
                     fullName: displayScore.homeTeamFull,
                     score: displayScore.homeScore,
                     isHome: true
                 )
             }
+
+            // Sport-specific situation
+            if let situation = displayScore.situation {
+                Divider()
+                SituationView(
+                    situation: situation,
+                    homeTeam: displayScore.homeTeam,
+                    awayTeam: displayScore.awayTeam
+                )
+            }
         }
         .padding(.vertical, 8)
+        .listRowBackground(
+            LinearGradient(
+                colors: [Color(hex: team.primaryColor).opacity(0.08), .clear],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 }
 
 struct TeamScoreColumn: View {
+    let team: DallasTeam
     let abbreviation: String
     let fullName: String
     let score: Int
@@ -121,10 +144,21 @@ struct TeamScoreColumn: View {
 
     var body: some View {
         VStack(spacing: 4) {
+            // Team logo
+            AsyncImage(url: logoURL) { image in
+                image.resizable().scaledToFit()
+            } placeholder: {
+                Text(abbreviation)
+                    .font(.caption2.bold())
+                    .foregroundStyle(.secondary)
+            }
+            .frame(width: 32, height: 32)
+
             Text(abbreviation)
-                .font(.title2.bold())
+                .font(.headline.bold())
             Text("\(score)")
                 .font(.system(size: 36, weight: .bold, design: .rounded))
+                .contentTransition(.numericText())
             if isHome {
                 Text("HOME")
                     .font(.caption2)
@@ -132,6 +166,14 @@ struct TeamScoreColumn: View {
             }
         }
         .frame(minWidth: 80)
+    }
+
+    private var logoURL: URL? {
+        ESPNImages.teamLogoURL(
+            league: team.espnLeague,
+            abbreviation: abbreviation.lowercased(),
+            size: 64
+        )
     }
 }
 

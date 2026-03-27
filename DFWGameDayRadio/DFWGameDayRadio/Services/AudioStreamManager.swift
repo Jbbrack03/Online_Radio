@@ -11,6 +11,9 @@ class AudioStreamManager {
     var isBuffering = false
     var error: String?
 
+    /// Read-only access for StreamLatencyEstimator to measure buffer depth.
+    var currentPlayerItem: AVPlayerItem? { playerItem }
+
     private var player: AVPlayer?
     private var playerItem: AVPlayerItem?
     private var statusObservation: NSKeyValueObservation?

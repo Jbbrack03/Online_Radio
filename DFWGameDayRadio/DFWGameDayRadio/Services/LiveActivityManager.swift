@@ -29,7 +29,8 @@ class LiveActivityManager {
             awayScore: score.awayScore,
             gameClockDisplay: score.clockDisplay,
             gameState: score.state,
-            statusDetail: score.statusDetail
+            statusDetail: score.statusDetail,
+            situation: score.situation
         )
 
         do {
@@ -52,7 +53,8 @@ class LiveActivityManager {
             awayScore: score.awayScore,
             gameClockDisplay: score.clockDisplay,
             gameState: score.state,
-            statusDetail: score.statusDetail
+            statusDetail: score.statusDetail,
+            situation: score.situation
         )
 
         Task {

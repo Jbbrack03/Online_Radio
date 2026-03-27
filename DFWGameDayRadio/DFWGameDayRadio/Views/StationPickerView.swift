@@ -1,9 +1,7 @@
 import SwiftUI
 
 struct StationPickerView: View {
-    @State private var audioManager = AudioStreamManager.shared
-    @State private var scoreService = ESPNScoreService.shared
-    @State private var delayQueue = ScoreDelayQueue.shared
+    @State private var coordinator = GameCoordinator.shared
 
     var body: some View {
         NavigationStack {
@@ -11,46 +9,18 @@ struct StationPickerView: View {
                 ForEach(RadioStation.allCases) { station in
                     StationRow(
                         station: station,
-                        isActive: audioManager.currentStation == station,
-                        isPlaying: audioManager.currentStation == station && audioManager.isPlaying,
-                        isBuffering: audioManager.currentStation == station && audioManager.isBuffering
+                        isActive: coordinator.currentStation == station,
+                        isPlaying: coordinator.currentStation == station && coordinator.isPlaying,
+                        isBuffering: coordinator.currentStation == station && coordinator.isBuffering
                     ) {
-                        handleStationTap(station)
+                        coordinator.playAndTrack(station: station)
                     }
                 }
             }
             .navigationTitle("DFW GameDay Radio")
-            .overlay {
-                if audioManager.currentStation != nil {
-                    VStack {
-                        Spacer()
-                        NowPlayingBar()
-                    }
-                }
-            }
-        }
-    }
-
-    private func handleStationTap(_ station: RadioStation) {
-        if audioManager.currentStation == station {
-            audioManager.togglePlayPause()
-        } else {
-            audioManager.play(station: station)
-            startTracking(station: station)
-        }
-    }
-
-    private func startTracking(station: RadioStation) {
-        let teams = station.teams
-        scoreService.startPolling(for: teams)
-        delayQueue.startProcessing()
-
-        // Start live activities for live games after a brief delay for ESPN to respond
-        Task {
-            try? await Task.sleep(for: .seconds(3))
-            for team in teams {
-                if let score = scoreService.activeGames[team], score.isLive {
-                    LiveActivityManager.shared.startActivity(for: team, score: score, station: station)
+            .overlay(alignment: .bottom) {
+                if coordinator.currentStation != nil {
+                    NowPlayingBar()
                 }
             }
         }
@@ -66,15 +36,14 @@ struct StationRow: View {
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 16) {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                    .font(.title2)
-                    .foregroundStyle(isActive ? .blue : .secondary)
-                    .frame(width: 44)
+            HStack(spacing: 12) {
+                // Team logos
+                teamLogos
+                    .frame(width: 52)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(station.displayName)
-                        .font(.headline)
+                        .font(.title3.bold())
                     Text(station.callSign)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -96,45 +65,79 @@ struct StationRow: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, 6)
         }
         .buttonStyle(.plain)
+        .listRowBackground(
+            isActive ? stationGradient : nil
+        )
+    }
+
+    private var teamLogos: some View {
+        ZStack {
+            ForEach(Array(station.teams.enumerated()), id: \.element.id) { index, team in
+                AsyncImage(url: team.logoURL) { image in
+                    image.resizable().scaledToFit()
+                } placeholder: {
+                    Image(systemName: "antenna.radiowaves.left.and.right")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(width: 36, height: 36)
+                .offset(x: station.teams.count > 1 ? CGFloat(index * 16 - 8) : 0)
+            }
+        }
+    }
+
+    private var stationGradient: some View {
+        let color = Color(hex: station.teams.first?.primaryColor ?? "#333333")
+        return LinearGradient(
+            colors: [color.opacity(0.15), color.opacity(0.05)],
+            startPoint: .leading,
+            endPoint: .trailing
+        )
     }
 }
 
 struct NowPlayingBar: View {
-    @State private var audioManager = AudioStreamManager.shared
-    @State private var delayQueue = ScoreDelayQueue.shared
+    @State private var coordinator = GameCoordinator.shared
 
     var body: some View {
-        if let station = audioManager.currentStation {
+        if let station = coordinator.currentStation {
             VStack(spacing: 0) {
                 Divider()
-                HStack {
-                    VStack(alignment: .leading) {
+                HStack(spacing: 12) {
+                    // Team logo
+                    if let team = station.teams.first {
+                        AsyncImage(url: team.logoURL) { image in
+                            image.resizable().scaledToFit()
+                        } placeholder: {
+                            Image(systemName: "radio")
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(width: 32, height: 32)
+                    }
+
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(station.displayName)
                             .font(.subheadline.bold())
                         if let team = station.teams.first,
-                           let score = delayQueue.delayedScores[team] {
+                           let score = coordinator.delayedScores[team] {
                             Text(score.scoreLine)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                                .contentTransition(.numericText())
                         }
                     }
 
                     Spacer()
 
-                    Button(action: { audioManager.togglePlayPause() }) {
-                        Image(systemName: audioManager.isPlaying ? "pause.fill" : "play.fill")
+                    Button(action: { coordinator.togglePlayPause() }) {
+                        Image(systemName: coordinator.isPlaying ? "pause.fill" : "play.fill")
                             .font(.title2)
                     }
 
-                    Button(action: {
-                        audioManager.stop()
-                        ScoreDelayQueue.shared.stopProcessing()
-                        ESPNScoreService.shared.stopPolling()
-                        LiveActivityManager.shared.endAllActivities()
-                    }) {
+                    Button(action: { coordinator.stopPlayback() }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.secondary)

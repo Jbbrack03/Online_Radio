@@ -12,6 +12,7 @@ struct GameScore: Equatable, Codable {
     let displayClock: String   // "8:42"
     let state: String          // "pre", "in", "post"
     let statusDetail: String   // "Q3 8:42" or "Final" or "7:30 PM CT"
+    var situation: GameSituation?
 
     var clockDisplay: String {
         if state == "pre" {
