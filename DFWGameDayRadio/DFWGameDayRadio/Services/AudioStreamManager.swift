@@ -84,13 +84,19 @@ class AudioStreamManager {
 
     func stop() {
         player?.pause()
-        player = nil
-        playerItem = nil
         statusObservation?.invalidate()
         timeControlObservation?.invalidate()
+        statusObservation = nil
+        timeControlObservation = nil
+        player = nil
+        playerItem = nil
         isPlaying = false
         isBuffering = false
         currentStation = nil
+        let center = MPRemoteCommandCenter.shared()
+        center.playCommand.removeTarget(nil)
+        center.pauseCommand.removeTarget(nil)
+        center.togglePlayPauseCommand.removeTarget(nil)
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 

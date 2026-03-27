@@ -74,12 +74,18 @@ struct HockeySituation: Codable, Hashable {
 
 extension Int {
     var ordinal: String {
-        switch self {
-        case 1: return "1st"
-        case 2: return "2nd"
-        case 3: return "3rd"
-        case 4: return "4th"
-        default: return "\(self)th"
+        let suffix: String
+        let tens = self % 100
+        if tens >= 11 && tens <= 13 {
+            suffix = "th"
+        } else {
+            switch self % 10 {
+            case 1: suffix = "st"
+            case 2: suffix = "nd"
+            case 3: suffix = "rd"
+            default: suffix = "th"
+            }
         }
+        return "\(self)\(suffix)"
     }
 }

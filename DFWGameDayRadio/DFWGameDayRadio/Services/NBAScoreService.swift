@@ -22,10 +22,12 @@ class NBAScoreService: ScoreProvider {
 
         Task { await fetchScoreboard() }
 
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] _ in
             guard let self else { return }
             Task { await self.fetchScoreboard() }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        pollingTimer = timer
     }
 
     func stopPolling() {
@@ -48,14 +50,13 @@ class NBAScoreService: ScoreProvider {
 
             for team in trackedTeams {
                 guard let nbaTeamId = team.nbaTeamID else { continue }
-                if let game = response.scoreboard.games.first(where: {
+                let game = response.scoreboard.games.first(where: {
                     $0.homeTeam.teamId == nbaTeamId || $0.awayTeam.teamId == nbaTeamId
-                }) {
-                    let score = mapToGameScore(game: game)
-                    await MainActor.run {
-                        self.activeGames[team] = score
-                        self.lastError = nil
-                    }
+                })
+                let score = game.map { mapToGameScore(game: $0) }
+                await MainActor.run {
+                    self.activeGames[team] = score
+                    self.lastError = nil
                 }
             }
         } catch {
@@ -89,11 +90,13 @@ class NBAScoreService: ScoreProvider {
         // Build situation
         var situation: GameSituation?
         if state == "in" {
+            let homeBonusStr = game.homeTeam.inBonus ?? ""
+            let awayBonusStr = game.awayTeam.inBonus ?? ""
             situation = .basketball(BasketballSituation(
                 timeoutsHome: game.homeTeam.timeoutsRemaining ?? 0,
                 timeoutsAway: game.awayTeam.timeoutsRemaining ?? 0,
-                bonusHome: game.homeTeam.inBonus == "1",
-                bonusAway: game.awayTeam.inBonus == "1"
+                bonusHome: !homeBonusStr.isEmpty && homeBonusStr != "0",
+                bonusAway: !awayBonusStr.isEmpty && awayBonusStr != "0"
             ))
         }
 

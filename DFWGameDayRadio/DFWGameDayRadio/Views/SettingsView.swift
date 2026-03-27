@@ -4,6 +4,7 @@ struct SettingsView: View {
     @State private var delayQueue = ScoreDelayQueue.shared
     @State private var latencyEstimator = StreamLatencyEstimator.shared
     @State private var offsetValue: Double = ScoreDelayQueue.shared.userOffset
+    @State private var coordinator = GameCoordinator.shared
 
     var body: some View {
         NavigationStack {
@@ -14,6 +15,9 @@ struct SettingsView: View {
                 aboutSection
             }
             .navigationTitle("Settings")
+            .onAppear {
+                offsetValue = delayQueue.userOffset
+            }
         }
     }
 

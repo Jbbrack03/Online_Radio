@@ -44,9 +44,12 @@ class CarPlayTemplateManager {
                 self?.startScoreMetadataUpdates()
                 completion()
 
-                // Navigate to Now Playing
-                if let controller = self?.interfaceController {
-                    controller.pushTemplate(CPNowPlayingTemplate.shared, animated: true, completion: nil)
+                // Switch to Now Playing tab (don't push — it's already in the tab bar)
+                if let tabBar = self?.interfaceController?.rootTemplate as? CPTabBarTemplate {
+                    let nowPlayingIndex = tabBar.templates.firstIndex(where: { $0 is CPNowPlayingTemplate })
+                    if let index = nowPlayingIndex {
+                        tabBar.selectTemplate(at: index)
+                    }
                 }
             }
 

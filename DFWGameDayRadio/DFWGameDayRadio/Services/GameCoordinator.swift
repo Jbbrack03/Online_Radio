@@ -14,6 +14,7 @@ class GameCoordinator {
     private let liveActivityManager = LiveActivityManager.shared
     private let latencyEstimator = StreamLatencyEstimator.shared
     private var feedTimer: Timer?
+    private var audioSyncTimer: Timer?
     private var activeProviders: [DallasTeam: ScoreProvider] = [:]
     private var wasPlaying = false
 
@@ -36,6 +37,7 @@ class GameCoordinator {
 
         currentStation = station
         audioManager.play(station: station)
+        startAudioSync()
         startTracking(station: station)
     }
 
@@ -48,18 +50,46 @@ class GameCoordinator {
     func stopPlayback() {
         stopTracking()
         audioManager.stop()
+        stopAudioSync()
+        syncAudioState()
         currentStation = nil
     }
 
-    // MARK: - Audio State (forwarded from AudioStreamManager)
+    // MARK: - Audio State Sync
 
-    var isPlaying: Bool { audioManager.isPlaying }
-    var isBuffering: Bool { audioManager.isBuffering }
-    var audioError: String? { audioManager.error }
+    private func startAudioSync() {
+        audioSyncTimer?.invalidate()
+        syncAudioState()
+        audioSyncTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+            self?.syncAudioState()
+        }
+    }
+
+    private func stopAudioSync() {
+        audioSyncTimer?.invalidate()
+        audioSyncTimer = nil
+    }
+
+    private func syncAudioState() {
+        let newPlaying = audioManager.isPlaying
+        let newBuffering = audioManager.isBuffering
+        let newError = audioManager.error
+        if isPlaying != newPlaying { isPlaying = newPlaying }
+        if isBuffering != newBuffering { isBuffering = newBuffering }
+        if audioError != newError { audioError = newError }
+        let newDelayed = delayQueue.delayedScores
+        if delayedScores != newDelayed { delayedScores = newDelayed }
+    }
+
+    // MARK: - Audio State (synced from AudioStreamManager)
+
+    var isPlaying: Bool = false
+    var isBuffering: Bool = false
+    var audioError: String?
 
     // MARK: - Score State
 
-    var delayedScores: [DallasTeam: GameScore] { delayQueue.delayedScores }
+    var delayedScores: [DallasTeam: GameScore] = [:]
 
     /// Aggregate errors from all active providers.
     var activeErrors: [String] {
@@ -156,14 +186,15 @@ class GameCoordinator {
         }
 
         // Auto-start live activities for games already in progress
-        Task {
+        Task { [weak self] in
             try? await Task.sleep(for: .seconds(3))
+            guard let self, self.isTracking else { return }
             for team in teams {
-                if let provider = activeProviders[team],
+                if let provider = self.activeProviders[team],
                    let score = provider.activeGames[team],
                    score.isLive {
                     await MainActor.run {
-                        liveActivityManager.startActivity(for: team, score: score, station: station)
+                        self.liveActivityManager.startActivity(for: team, score: score, station: station)
                     }
                 }
             }
@@ -173,6 +204,7 @@ class GameCoordinator {
     private func stopTracking() {
         feedTimer?.invalidate()
         feedTimer = nil
+        stopAudioSync()
         latencyEstimator.stopProbing()
 
         // Stop all active providers

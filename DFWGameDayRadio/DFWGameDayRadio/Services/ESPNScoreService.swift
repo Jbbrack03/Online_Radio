@@ -21,10 +21,12 @@ class ESPNScoreService: ScoreProvider {
         // Fetch immediately, then on interval
         Task { await fetchAllScores(for: teams) }
 
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] _ in
             guard let self else { return }
             Task { await self.fetchAllScores(for: teams) }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        pollingTimer = timer
     }
 
     func stopPolling() {
@@ -49,10 +51,9 @@ class ESPNScoreService: ScoreProvider {
                 guard let scoreboard else { continue }
                 let teamsForEndpoint = teamsByEndpoint[endpoint] ?? []
                 for team in teamsForEndpoint {
-                    if let game = findGame(for: team, in: scoreboard) {
-                        await MainActor.run {
-                            self.activeGames[team] = game
-                        }
+                    let game = findGame(for: team, in: scoreboard)
+                    await MainActor.run {
+                        self.activeGames[team] = game
                     }
                 }
             }

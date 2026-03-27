@@ -26,10 +26,12 @@ class NHLScoreService: ScoreProvider {
             await fetchAllPlayByPlay()
         }
 
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] _ in
             guard let self else { return }
             Task { await self.fetchAllPlayByPlay() }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        pollingTimer = timer
     }
 
     func stopPolling() {
@@ -58,6 +60,10 @@ class NHLScoreService: ScoreProvider {
                 }) {
                     await MainActor.run {
                         self.gameIds[team] = game.id
+                    }
+                } else {
+                    await MainActor.run {
+                        self.activeGames[team] = nil
                     }
                 }
             }

@@ -84,13 +84,14 @@ struct FootballFieldView: View {
                     .frame(width: 2, height: height)
                     .offset(x: width / 2)
 
-                // Ball position marker
-                let yardPosition = CGFloat(situation.yardLine) / 100.0
+                // Ball position marker (yard lines are 0-50; map to 0-1 field range)
+                let yardPosition = CGFloat(situation.yardLine) / 50.0
+                let clampedPosition = min(max(yardPosition, 0), 1)
                 Circle()
                     .fill(Color.orange)
                     .frame(width: markerSize, height: markerSize)
                     .shadow(color: .orange.opacity(0.5), radius: 3)
-                    .offset(x: width * yardPosition - 6)
+                    .offset(x: width * clampedPosition - markerSize / 2)
 
                 // End zones
                 RoundedRectangle(cornerRadius: 4)

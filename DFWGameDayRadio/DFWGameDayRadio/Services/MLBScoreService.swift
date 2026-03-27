@@ -26,10 +26,12 @@ class MLBScoreService: ScoreProvider {
             await fetchAllLiveFeeds()
         }
 
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { [weak self] _ in
             guard let self else { return }
             Task { await self.fetchAllLiveFeeds() }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        pollingTimer = timer
     }
 
     func stopPolling() {
@@ -56,6 +58,10 @@ class MLBScoreService: ScoreProvider {
                 if let game = schedule.dates?.first?.games.first {
                     await MainActor.run {
                         self.gamePks[team] = game.gamePk
+                    }
+                } else {
+                    await MainActor.run {
+                        self.activeGames[team] = nil
                     }
                 }
             } catch {

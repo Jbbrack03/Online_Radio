@@ -4,19 +4,11 @@ struct GameListView: View {
     @State private var coordinator = GameCoordinator.shared
     @State private var isLoading = false
 
-    private var scoreService: ESPNScoreService { ESPNScoreService.shared }
+    @State private var scoreService = ESPNScoreService.shared
 
     var body: some View {
         NavigationStack {
             List {
-                if coordinator.activeGames.isEmpty && scoreService.activeGames.isEmpty && !isLoading {
-                    ContentUnavailableView(
-                        "No Games Today",
-                        systemImage: "sportscourt",
-                        description: Text("No Dallas team games found on today's schedule.")
-                    )
-                }
-
                 ForEach(DallasTeam.allCases) { team in
                     let delayedScore = coordinator.delayedScores[team]
                     let realtimeScore = coordinator.activeGames[team] ?? scoreService.activeGames[team]
@@ -46,6 +38,15 @@ struct GameListView: View {
                     }
                 }
             }
+            .overlay {
+                if !hasAnyGames && !isLoading {
+                    ContentUnavailableView(
+                        "No Games Today",
+                        systemImage: "sportscourt",
+                        description: Text("No Dallas team games found on today's schedule.")
+                    )
+                }
+            }
             .navigationTitle("Today's Games")
             .refreshable {
                 isLoading = true
@@ -53,15 +54,18 @@ struct GameListView: View {
                 isLoading = false
             }
             .onAppear {
-                if coordinator.activeGames.isEmpty && scoreService.activeGames.isEmpty {
-                    isLoading = true
-                    Task {
-                        await scoreService.fetchAllScores()
-                        isLoading = false
-                    }
+                guard !isLoading && !hasAnyGames else { return }
+                isLoading = true
+                Task {
+                    await scoreService.fetchAllScores()
+                    isLoading = false
                 }
             }
         }
+    }
+
+    private var hasAnyGames: Bool {
+        !coordinator.activeGames.isEmpty || !scoreService.activeGames.isEmpty
     }
 }
 

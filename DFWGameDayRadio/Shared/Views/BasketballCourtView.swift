@@ -40,6 +40,11 @@ struct BasketballCourtView: View {
             if situation.bonusHome {
                 bonusBadge(team: homeTeam)
             }
+            if !situation.bonusAway && !situation.bonusHome {
+                Text("TO: \(awayTeam) \(situation.timeoutsAway) – \(homeTeam) \(situation.timeoutsHome)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 

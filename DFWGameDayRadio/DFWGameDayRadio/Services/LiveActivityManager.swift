@@ -68,7 +68,7 @@ class LiveActivityManager {
     }
 
     func endActivity(for team: DallasTeam) {
-        guard let activityID = activeActivities[team] else { return }
+        guard let activityID = activeActivities.removeValue(forKey: team) else { return }
 
         Task {
             for activity in Activity<ScoreActivityAttributes>.activities {
@@ -78,16 +78,18 @@ class LiveActivityManager {
                 }
             }
         }
-
-        activeActivities.removeValue(forKey: team)
     }
 
     func endAllActivities() {
+        let ids = Set(activeActivities.values)
+        activeActivities.removeAll()
+
         Task {
             for activity in Activity<ScoreActivityAttributes>.activities {
-                await activity.end(nil, dismissalPolicy: .immediate)
+                if ids.contains(activity.id) {
+                    await activity.end(nil, dismissalPolicy: .immediate)
+                }
             }
         }
-        activeActivities.removeAll()
     }
 }
