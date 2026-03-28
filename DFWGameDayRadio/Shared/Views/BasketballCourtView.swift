@@ -21,7 +21,6 @@ struct BasketballCourtView: View {
 
     private var fullLayout: some View {
         VStack(spacing: 8) {
-            // Timeout dots
             HStack {
                 timeoutRow(team: awayTeam, remaining: situation.timeoutsAway, total: 7, isBonus: situation.bonusAway)
                 Spacer()
@@ -60,7 +59,7 @@ struct BasketballCourtView: View {
                         .font(.system(size: 8, weight: .bold))
                         .padding(.horizontal, 4)
                         .padding(.vertical, 1)
-                        .background(Color.red.opacity(0.2))
+                        .background(Color.red.opacity(0.15))
                         .foregroundStyle(.red)
                         .clipShape(Capsule())
                 }
@@ -69,7 +68,7 @@ struct BasketballCourtView: View {
             HStack(spacing: 3) {
                 ForEach(0..<total, id: \.self) { i in
                     Circle()
-                        .fill(i < remaining ? Color.primary.opacity(0.7) : Color.secondary.opacity(0.2))
+                        .fill(i < remaining ? Color.primary.opacity(0.6) : Color(.tertiarySystemFill))
                         .frame(width: timeoutDotSize, height: timeoutDotSize)
                 }
             }

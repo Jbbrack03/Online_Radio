@@ -95,7 +95,7 @@ struct BaseballDiamondView: View {
                     path.addLine(to: CGPoint(x: center.x - radius, y: center.y)) // 3B (left)
                     path.closeSubpath()
                 }
-                context.stroke(diamondPath, with: .color(.secondary.opacity(0.5)), lineWidth: 1.5)
+                context.stroke(diamondPath, with: .color(.secondary.opacity(0.4)), lineWidth: 1.5)
 
                 // Base positions
                 let baseSize: CGFloat = size * 0.14
@@ -106,7 +106,6 @@ struct BaseballDiamondView: View {
                 ]
 
                 for (point, occupied) in bases {
-                    // Rotated square (diamond shape for each base)
                     let basePath = Path { path in
                         let half = baseSize / 2
                         path.move(to: CGPoint(x: point.x, y: point.y - half))
@@ -119,7 +118,7 @@ struct BaseballDiamondView: View {
                     if occupied {
                         context.fill(basePath, with: .color(.yellow))
                     }
-                    context.stroke(basePath, with: .color(.secondary), lineWidth: 1)
+                    context.stroke(basePath, with: .color(.secondary.opacity(0.6)), lineWidth: 1)
                 }
 
                 // Home plate
@@ -133,7 +132,7 @@ struct BaseballDiamondView: View {
                     path.addLine(to: CGPoint(x: homePoint.x - half, y: homePoint.y))
                     path.closeSubpath()
                 }
-                context.stroke(homePath, with: .color(.secondary), lineWidth: 1)
+                context.stroke(homePath, with: .color(.secondary.opacity(0.6)), lineWidth: 1)
             }
         }
     }
@@ -149,7 +148,7 @@ struct BaseballDiamondView: View {
                     .foregroundStyle(.secondary)
                 ForEach(0..<4, id: \.self) { i in
                     Circle()
-                        .fill(i < situation.balls ? Color.green : Color.secondary.opacity(0.3))
+                        .fill(i < situation.balls ? Color.green : Color(.tertiarySystemFill))
                         .frame(width: currentDotSize, height: currentDotSize)
                 }
                 Text("\(situation.balls)")
@@ -162,7 +161,7 @@ struct BaseballDiamondView: View {
                     .foregroundStyle(.secondary)
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
-                        .fill(i < situation.strikes ? Color.red : Color.secondary.opacity(0.3))
+                        .fill(i < situation.strikes ? Color.red : Color(.tertiarySystemFill))
                         .frame(width: currentDotSize, height: currentDotSize)
                 }
                 Text("\(situation.strikes)")
@@ -182,7 +181,7 @@ struct BaseballDiamondView: View {
                 .foregroundStyle(.secondary)
             ForEach(0..<3, id: \.self) { i in
                 Circle()
-                    .fill(i < situation.outs ? Color.orange : Color.secondary.opacity(0.3))
+                    .fill(i < situation.outs ? Color.orange : Color(.tertiarySystemFill))
                     .frame(width: currentDotSize, height: currentDotSize)
             }
             Text("\(situation.outs)")

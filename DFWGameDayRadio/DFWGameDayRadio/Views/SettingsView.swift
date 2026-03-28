@@ -58,6 +58,7 @@ struct SettingsView: View {
                     }
                     .accessibilityLabel("Fine-tune delay offset")
                     .accessibilityValue("\(Int(offsetValue)) seconds")
+                    .sensoryFeedback(.selection, trigger: offsetValue)
                     .onChange(of: offsetValue) { _, newValue in
                         delayQueue.userOffset = newValue
                     }

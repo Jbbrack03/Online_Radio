@@ -33,7 +33,7 @@ struct HockeyRinkView: View {
                             .font(.caption.bold())
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.orange.opacity(0.2))
+                            .background(.orange.opacity(0.15))
                             .clipShape(Capsule())
                     }
                     if let time = situation.powerPlayTimeRemaining, !time.isEmpty {
@@ -91,11 +91,11 @@ struct HockeyRinkView: View {
                 ZStack(alignment: .leading) {
                     // Full bar background
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(Color.secondary.opacity(0.2))
+                        .fill(Color(.tertiarySystemFill))
 
                     // Away team portion
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(Color.blue.opacity(0.6))
+                        .fill(Color.blue.opacity(0.5))
                         .frame(width: max(awayWidth, 2))
                 }
             }

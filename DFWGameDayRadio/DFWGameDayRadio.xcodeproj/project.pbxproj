@@ -37,6 +37,7 @@
 		AE4DEE5969AD8F67816F2B82 /* NBAResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5324774D394F74DAE0839B4F /* NBAResponse.swift */; };
 		AEB4F6AC285B2D39FAACB261 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8693454D62C9DD4B4269AF33 /* AppDelegate.swift */; };
 		B6164EC43E0BE61910D2AF19 /* DFWGameDayRadioWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20E761BDF79D8C82E71F5EE /* DFWGameDayRadioWidgetBundle.swift */; };
+		BBABB39CBA91850B997DA532 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314FCCB482636756FFEF60DF /* DesignSystem.swift */; };
 		BEA4DBACADD811228C41D5EC /* RadioStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBCF7EA02327869191535499 /* RadioStation.swift */; };
 		BFBF5E0E4B2B4A839486D9F0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D83DBEB2C54ED7648650B8 /* SettingsView.swift */; };
 		C12CA78C61A8CADCD4658CE6 /* CarPlayTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEBED8E8CC6AA079B4B99A9 /* CarPlayTemplateManager.swift */; };
@@ -51,6 +52,7 @@
 		DC222C763D6033D27A473CC3 /* DallasTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E04FF127C7CEAB037C6DCEB /* DallasTeam.swift */; };
 		DCB54E740D471A6C923AC46E /* ESPNScoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8250098855CAC9F0F2C767 /* ESPNScoreService.swift */; };
 		E0DC5335DB4A5A7A352FC1B3 /* FootballFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E50408E48DF39B84C4396F4 /* FootballFieldView.swift */; };
+		E0F275DDCC77B72DB2C143FF /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB87CC493DB0B6A244CF713A /* NowPlayingView.swift */; };
 		E3BC5882B0C143D2C1BD0D73 /* ScoreDelayQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618D08C373E2C1CD7D26BBC7 /* ScoreDelayQueue.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +90,7 @@
 		26CD59FF2776DBB1E76C6FF2 /* BasketballCourtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketballCourtView.swift; sourceTree = "<group>"; };
 		2BF5BAAC37D35B8B2E0DE84C /* ESPNResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPNResponse.swift; sourceTree = "<group>"; };
 		311929143580834226AE7FB0 /* DFWGameDayRadioWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = DFWGameDayRadioWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		314FCCB482636756FFEF60DF /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		3D8250098855CAC9F0F2C767 /* ESPNScoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESPNScoreService.swift; sourceTree = "<group>"; };
 		3DEAE708397AE64CBBDBE264 /* BaseballDiamondView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseballDiamondView.swift; sourceTree = "<group>"; };
 		4DEBED8E8CC6AA079B4B99A9 /* CarPlayTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayTemplateManager.swift; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 		BBCF7EA02327869191535499 /* RadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStation.swift; sourceTree = "<group>"; };
 		D4A183882015E515124C53F4 /* AudioStreamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamManager.swift; sourceTree = "<group>"; };
 		D708760D01589C2982C2778F /* ScoreActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreActivityAttributes.swift; sourceTree = "<group>"; };
+		DB87CC493DB0B6A244CF713A /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		E28F0726BB3D4A203A6D7F99 /* MLBResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLBResponse.swift; sourceTree = "<group>"; };
 		E6A2960A70212AFE2E546217 /* DFWGameDayRadio.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DFWGameDayRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6EFA9167F340CA922437273 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
@@ -189,6 +193,7 @@
 			children = (
 				AB4FBC71DBCD945CEB48DDA9 /* ContentView.swift */,
 				7333711CFE3809607D9AEB10 /* GameListView.swift */,
+				DB87CC493DB0B6A244CF713A /* NowPlayingView.swift */,
 				F4D83DBEB2C54ED7648650B8 /* SettingsView.swift */,
 				0AFB6CC2C8CCB754C7677065 /* StationPickerView.swift */,
 			);
@@ -249,6 +254,7 @@
 			isa = PBXGroup;
 			children = (
 				FF682C8D5637ED2532BE88C1 /* Constants.swift */,
+				314FCCB482636756FFEF60DF /* DesignSystem.swift */,
 				8882865D190D61121A681CB5 /* UserDefaultsKeys.swift */,
 			);
 			path = Utilities;
@@ -371,6 +377,7 @@
 				D8A045F727464A7A9BDD0B72 /* ContentView.swift in Sources */,
 				7AFA3D1DE30CE0DADFE8A905 /* DFWGameDayRadioApp.swift in Sources */,
 				DC222C763D6033D27A473CC3 /* DallasTeam.swift in Sources */,
+				BBABB39CBA91850B997DA532 /* DesignSystem.swift in Sources */,
 				35BDF4B89EC4665D8CE3B09B /* ESPNResponse.swift in Sources */,
 				DCB54E740D471A6C923AC46E /* ESPNScoreService.swift in Sources */,
 				E0DC5335DB4A5A7A352FC1B3 /* FootballFieldView.swift in Sources */,
@@ -386,6 +393,7 @@
 				C382B5498FCE82B0425E8D9E /* NBAScoreService.swift in Sources */,
 				428348A6D578A17D2FC4058A /* NHLResponse.swift in Sources */,
 				C9D2C8F2E8C7442C872B485B /* NHLScoreService.swift in Sources */,
+				E0F275DDCC77B72DB2C143FF /* NowPlayingView.swift in Sources */,
 				BEA4DBACADD811228C41D5EC /* RadioStation.swift in Sources */,
 				6C5B24D094EC662AA6567CEA /* ScoreActivityAttributes.swift in Sources */,
 				E3BC5882B0C143D2C1BD0D73 /* ScoreDelayQueue.swift in Sources */,

@@ -8,6 +8,8 @@ struct ScoreActivityAttributes: ActivityAttributes {
     let awayTeamFull: String
     let sport: String
     let stationName: String
+    let homeTeamColor: String  // Hex color for background tinting
+    let awayTeamColor: String  // Hex color for accents
 
     struct ContentState: Codable, Hashable {
         let homeScore: Int

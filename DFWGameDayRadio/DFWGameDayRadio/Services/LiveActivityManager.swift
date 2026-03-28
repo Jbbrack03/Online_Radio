@@ -21,7 +21,9 @@ class LiveActivityManager {
             homeTeamFull: score.homeTeamFull,
             awayTeamFull: score.awayTeamFull,
             sport: team.sport,
-            stationName: station.displayName
+            stationName: station.displayName,
+            homeTeamColor: team.primaryColor,
+            awayTeamColor: team.primaryColor
         )
 
         let initialState = ScoreActivityAttributes.ContentState(
@@ -60,7 +62,14 @@ class LiveActivityManager {
         Task {
             for activity in Activity<ScoreActivityAttributes>.activities {
                 if activity.id == activityID {
-                    await activity.update(.init(state: state, staleDate: nil))
+                    await activity.update(
+                        ActivityContent(state: state, staleDate: nil),
+                        alertConfiguration: score.isLive ? AlertConfiguration(
+                            title: "\(score.homeTeam) vs \(score.awayTeam)",
+                            body: "\(score.awayTeam) \(score.awayScore) - \(score.homeTeam) \(score.homeScore)",
+                            sound: .default
+                        ) : nil
+                    )
                     break
                 }
             }

@@ -27,6 +27,11 @@ struct ScoreLiveActivity: Widget {
 
                 DynamicIslandExpandedRegion(.center) {
                     VStack(spacing: 2) {
+                        // Sport icon
+                        Image(systemName: sportIcon(for: context.attributes.sport))
+                            .font(.system(size: 10))
+                            .foregroundStyle(.secondary)
+
                         if context.state.gameState == "in" {
                             HStack(spacing: 2) {
                                 Circle()
@@ -44,16 +49,13 @@ struct ScoreLiveActivity: Widget {
                 }
 
                 DynamicIslandExpandedRegion(.bottom) {
-                    // Show situation data if available, otherwise station name
                     if let situation = context.state.situation {
-                        SituationView(
-                            situation: situation,
-                            homeTeam: context.attributes.homeTeam,
-                            awayTeam: context.attributes.awayTeam,
-                            compact: true
-                        )
+                        Text(situation.microSummary)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     } else {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image(systemName: "radio")
                                 .font(.caption2)
                             Text(context.attributes.stationName)
@@ -64,7 +66,10 @@ struct ScoreLiveActivity: Widget {
                 }
             } compactLeading: {
                 // MARK: - Compact Leading
-                HStack(spacing: 4) {
+                HStack(spacing: 3) {
+                    Circle()
+                        .fill(Color(hex: context.attributes.awayTeamColor))
+                        .frame(width: 4, height: 4)
                     Text(context.attributes.awayTeam)
                         .font(.caption2.bold())
                     Text("\(context.state.awayScore)")
@@ -73,12 +78,15 @@ struct ScoreLiveActivity: Widget {
                 }
             } compactTrailing: {
                 // MARK: - Compact Trailing
-                HStack(spacing: 4) {
+                HStack(spacing: 3) {
                     Text("\(context.state.homeScore)")
                         .font(.caption.bold().monospacedDigit())
                         .contentTransition(.numericText())
                     Text(context.attributes.homeTeam)
                         .font(.caption2.bold())
+                    Circle()
+                        .fill(Color(hex: context.attributes.homeTeamColor))
+                        .frame(width: 4, height: 4)
                 }
             } minimal: {
                 // MARK: - Minimal (when multiple activities)
@@ -94,7 +102,7 @@ struct ScoreLiveActivity: Widget {
     @ViewBuilder
     private func lockScreenView(context: ActivityViewContext<ScoreActivityAttributes>) -> some View {
         VStack(spacing: 8) {
-            // Score row
+            // Score row in concentric rounded container
             HStack {
                 // Away team
                 VStack(spacing: 4) {
@@ -114,7 +122,7 @@ struct ScoreLiveActivity: Widget {
                                 .fill(.red)
                                 .frame(width: 8, height: 8)
                             Text("LIVE")
-                                .font(.caption2.bold())
+                                .font(.caption.bold())
                                 .foregroundStyle(.red)
                         }
                     }
@@ -122,7 +130,7 @@ struct ScoreLiveActivity: Widget {
                         .font(.subheadline.bold())
                     Text(context.attributes.sport)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.6))
                 }
                 .frame(maxWidth: .infinity)
 
@@ -136,17 +144,18 @@ struct ScoreLiveActivity: Widget {
                 }
                 .frame(maxWidth: .infinity)
             }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.white.opacity(0.1))
+            )
 
-            // Situation data
+            // Situation micro-summary or station name
             if let situation = context.state.situation {
-                Divider()
-                    .background(.white.opacity(0.2))
-                SituationView(
-                    situation: situation,
-                    homeTeam: context.attributes.homeTeam,
-                    awayTeam: context.attributes.awayTeam,
-                    compact: true
-                )
+                Text(situation.microSummary)
+                    .font(.caption.bold())
+                    .foregroundStyle(.white.opacity(0.8))
+                    .lineLimit(1)
             } else {
                 HStack(spacing: 4) {
                     Image(systemName: "radio")
@@ -154,11 +163,12 @@ struct ScoreLiveActivity: Widget {
                     Text(context.attributes.stationName)
                         .font(.caption2)
                 }
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.6))
             }
         }
-        .padding()
-        .activityBackgroundTint(.black.opacity(0.7))
+        .foregroundStyle(.white)
+        .padding(14) // HIG: 14pt margins on all edges
+        .activityBackgroundTint(Color(hex: context.attributes.homeTeamColor))
     }
 
     // MARK: - Helpers
@@ -172,5 +182,30 @@ struct ScoreLiveActivity: Widget {
                 .font(.title2.bold().monospacedDigit())
                 .contentTransition(.numericText())
         }
+    }
+
+    private func sportIcon(for sport: String) -> String {
+        switch sport {
+        case "NFL": return "football"
+        case "MLB": return "baseball"
+        case "NBA": return "basketball"
+        case "NHL": return "hockey.puck"
+        default: return "sportscourt"
+        }
+    }
+}
+
+// MARK: - Color from hex (Widget extension needs its own copy)
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: Double
+        r = Double((int >> 16) & 0xFF) / 255.0
+        g = Double((int >> 8) & 0xFF) / 255.0
+        b = Double(int & 0xFF) / 255.0
+        self.init(red: r, green: g, blue: b)
     }
 }

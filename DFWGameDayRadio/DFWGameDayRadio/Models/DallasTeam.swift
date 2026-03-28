@@ -79,6 +79,19 @@ enum DallasTeam: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    var secondaryColor: String {
+        switch self {
+        case .cowboys: return "#869397"    // Silver
+        case .rangers: return "#C0111F"    // Red
+        case .mavericks: return "#BBC4CA"  // Silver
+        case .stars: return "#111111"      // Black
+        }
+    }
+
+    var accentColor: String {
+        secondaryColor
+    }
+
     var espnLeague: String {
         switch self {
         case .cowboys: return "nfl"

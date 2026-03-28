@@ -20,11 +20,9 @@ struct FootballFieldView: View {
 
     private var fullLayout: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Down and distance
             Text(situation.fieldPosition)
                 .font(.subheadline.bold())
 
-            // Field position bar
             fieldBar
                 .frame(height: barHeight)
                 .accessibilityElement(children: .ignore)
@@ -59,32 +57,30 @@ struct FootballFieldView: View {
             let height = geo.size.height
 
             ZStack(alignment: .leading) {
-                // Field background
+                // Field background — adapts to color scheme
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(
-                        LinearGradient(
-                            colors: [.green.opacity(0.3), .green.opacity(0.5), .green.opacity(0.3)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .fill(Color.green.opacity(0.25))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color.green.opacity(0.3), lineWidth: 1)
+                    }
 
                 // Yard line markers (every 10 yards)
                 ForEach(1..<10, id: \.self) { i in
                     let x = width * CGFloat(i) / 10.0
                     Rectangle()
-                        .fill(Color.primary.opacity(0.15))
+                        .fill(Color.primary.opacity(0.12))
                         .frame(width: 1, height: height)
                         .offset(x: x)
                 }
 
                 // 50 yard line
                 Rectangle()
-                    .fill(Color.primary.opacity(0.3))
+                    .fill(Color.primary.opacity(0.25))
                     .frame(width: 2, height: height)
                     .offset(x: width / 2)
 
-                // Ball position marker (yard lines are 0-50; map to 0-1 field range)
+                // Ball position marker
                 let yardPosition = CGFloat(situation.yardLine) / 50.0
                 let clampedPosition = min(max(yardPosition, 0), 1)
                 Circle()
@@ -94,13 +90,20 @@ struct FootballFieldView: View {
                     .offset(x: width * clampedPosition - markerSize / 2)
 
                 // End zones
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.red.opacity(0.3))
-                    .frame(width: 8, height: height)
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.blue.opacity(0.3))
-                    .frame(width: 8, height: height)
-                    .offset(x: width - 8)
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 4, bottomLeadingRadius: 4,
+                    bottomTrailingRadius: 0, topTrailingRadius: 0
+                )
+                .fill(Color.red.opacity(0.25))
+                .frame(width: 8, height: height)
+
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 0, bottomLeadingRadius: 0,
+                    bottomTrailingRadius: 4, topTrailingRadius: 4
+                )
+                .fill(Color.blue.opacity(0.25))
+                .frame(width: 8, height: height)
+                .offset(x: width - 8)
             }
         }
     }

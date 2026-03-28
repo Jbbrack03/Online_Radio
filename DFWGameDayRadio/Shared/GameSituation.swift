@@ -7,6 +7,34 @@ enum GameSituation: Codable, Hashable {
     case football(FootballSituation)
     case basketball(BasketballSituation)
     case hockey(HockeySituation)
+
+    /// Single-line summary for compact contexts (Live Activities, CarPlay metadata)
+    var microSummary: String {
+        switch self {
+        case .baseball(let s):
+            var runners: [String] = []
+            if s.runnerOnFirst { runners.append("1st") }
+            if s.runnerOnSecond { runners.append("2nd") }
+            if s.runnerOnThird { runners.append("3rd") }
+            let runnerText = runners.isEmpty ? "" : ", \(runners.joined(separator: "/"))"
+            return "\(s.inningDisplay) · \(s.countDisplay), \(s.outsDisplay)\(runnerText)"
+        case .football(let s):
+            return s.fieldPosition
+        case .basketball(let s):
+            var parts: [String] = []
+            if s.bonusHome || s.bonusAway { parts.append("Bonus") }
+            parts.append("TO: \(s.timeoutsAway)-\(s.timeoutsHome)")
+            return parts.joined(separator: " · ")
+        case .hockey(let s):
+            var parts: [String] = []
+            if s.powerPlay, let team = s.powerPlayTeam {
+                let timeStr = s.powerPlayTimeRemaining.map { " \($0)" } ?? ""
+                parts.append("PP \(team)\(timeStr)")
+            }
+            parts.append(s.shotsDisplay)
+            return parts.joined(separator: " · ")
+        }
+    }
 }
 
 struct BaseballSituation: Codable, Hashable {

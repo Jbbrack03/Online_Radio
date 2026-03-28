@@ -3,43 +3,46 @@ import SwiftUI
 struct GameListView: View {
     @State private var coordinator = GameCoordinator.shared
     @State private var isLoading = false
-
     @State private var scoreService = ESPNScoreService.shared
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(DallasTeam.allCases) { team in
-                    let delayedScore = coordinator.delayedScores[team]
-                    let realtimeScore = coordinator.activeGames[team] ?? scoreService.activeGames[team]
+            ScrollView {
+                LazyVStack(spacing: Spacing.md) {
+                    ForEach(DallasTeam.allCases) { team in
+                        let delayedScore = coordinator.delayedScores[team]
+                        let realtimeScore = coordinator.activeGames[team] ?? scoreService.activeGames[team]
 
-                    if let displayScore = delayedScore ?? realtimeScore {
-                        GameScoreCard(
-                            team: team,
-                            displayScore: displayScore,
-                            isDelayed: delayedScore != nil
-                        )
+                        if let displayScore = delayedScore ?? realtimeScore {
+                            GameScoreCard(
+                                team: team,
+                                displayScore: displayScore,
+                                isDelayed: delayedScore != nil
+                            )
+                        }
                     }
-                }
 
-                if !coordinator.activeErrors.isEmpty {
-                    Section("Status") {
+                    if !coordinator.activeErrors.isEmpty {
                         ForEach(coordinator.activeErrors, id: \.self) { error in
                             Label(error, systemImage: "exclamationmark.triangle")
                                 .font(.caption)
                                 .foregroundStyle(.orange)
+                                .padding(.horizontal, Spacing.lg)
                         }
-                    }
-                } else if let error = scoreService.lastError {
-                    Section("Status") {
+                    } else if let error = scoreService.lastError {
                         Label(error, systemImage: "exclamationmark.triangle")
                             .font(.caption)
                             .foregroundStyle(.orange)
+                            .padding(.horizontal, Spacing.lg)
                     }
                 }
+                .padding(.horizontal, Spacing.lg)
+                .padding(.vertical, Spacing.sm)
             }
             .overlay {
-                if !hasAnyGames && !isLoading {
+                if isLoading && !hasAnyGames {
+                    ProgressView("Loading scores...")
+                } else if !hasAnyGames && !isLoading {
                     ContentUnavailableView(
                         "No Games Today",
                         systemImage: "sportscourt",
@@ -75,14 +78,15 @@ struct GameScoreCard: View {
     let isDelayed: Bool
 
     var body: some View {
-        VStack(spacing: 12) {
-            // Header: sport + status
+        VStack(spacing: Spacing.md) {
+            // Header: sport badge + status
             HStack {
                 Text(team.sport)
                     .font(.caption.bold())
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(Color(hex: team.primaryColor).opacity(0.2))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, Spacing.sm)
+                    .padding(.vertical, Spacing.xs)
+                    .background(Color(hex: team.primaryColor))
                     .clipShape(Capsule())
 
                 Spacer()
@@ -96,7 +100,7 @@ struct GameScoreCard: View {
                 StatusBadge(state: displayScore.state, detail: displayScore.clockDisplay)
             }
 
-            // Score
+            // Score row
             HStack {
                 TeamScoreColumn(
                     team: team,
@@ -110,7 +114,7 @@ struct GameScoreCard: View {
 
                 if displayScore.isLive {
                     Text(displayScore.statusDetail)
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -136,15 +140,34 @@ struct GameScoreCard: View {
                 )
             }
         }
-        .padding(.vertical, 8)
+        .padding(Spacing.lg)
+        .background {
+            RoundedRectangle(cornerRadius: CornerRadius.card)
+                .fill(Color(.secondarySystemGroupedBackground))
+                .overlay(alignment: .leading) {
+                    // Team accent bar on left edge
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: CornerRadius.card,
+                        bottomLeadingRadius: CornerRadius.card,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 0
+                    )
+                    .fill(Color(hex: team.secondaryColor))
+                    .frame(width: 3)
+                }
+                .overlay {
+                    RoundedRectangle(cornerRadius: CornerRadius.card)
+                        .fill(
+                            LinearGradient(
+                                colors: [Color(hex: team.primaryColor).opacity(0.12), .clear],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                }
+                .clipShape(RoundedRectangle(cornerRadius: CornerRadius.card))
+        }
         .accessibilityElement(children: .contain)
-        .listRowBackground(
-            LinearGradient(
-                colors: [Color(hex: team.primaryColor).opacity(0.08), .clear],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
     }
 }
 
@@ -155,12 +178,10 @@ struct TeamScoreColumn: View {
     let score: Int
     let isHome: Bool
 
-    @ScaledMetric(relativeTo: .title) private var logoSize: CGFloat = 32
-    @ScaledMetric(relativeTo: .largeTitle) private var scoreSize: CGFloat = 36
+    @ScaledMetric(relativeTo: .title) private var logoSize: CGFloat = 48
 
     var body: some View {
-        VStack(spacing: 4) {
-            // Team logo
+        VStack(spacing: Spacing.xs) {
             AsyncImage(url: logoURL) { image in
                 image.resizable().scaledToFit()
             } placeholder: {
@@ -174,13 +195,14 @@ struct TeamScoreColumn: View {
             Text(abbreviation)
                 .font(.headline.bold())
             Text("\(score)")
-                .font(.system(size: scoreSize, weight: .bold, design: .rounded))
+                .font(.largeTitle.bold())
+                .fontDesign(.rounded)
                 .minimumScaleFactor(0.6)
                 .contentTransition(.numericText())
             if isHome {
                 Text("HOME")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color(hex: team.secondaryColor))
             }
         }
         .frame(minWidth: 80)
@@ -192,7 +214,7 @@ struct TeamScoreColumn: View {
         ESPNImages.teamLogoURL(
             league: team.espnLeague,
             abbreviation: abbreviation.lowercased(),
-            size: 64
+            size: 96
         )
     }
 }
@@ -202,10 +224,10 @@ struct StatusBadge: View {
     let detail: String
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Spacing.xs) {
             if state == "in" {
                 Image(systemName: "circle.fill")
-                    .font(.system(size: 8))
+                    .font(.system(size: 10))
                     .foregroundStyle(.red)
                     .symbolEffect(.pulse.byLayer)
                 Text("LIVE")
