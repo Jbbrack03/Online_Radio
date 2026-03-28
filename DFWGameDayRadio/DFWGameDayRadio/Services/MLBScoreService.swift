@@ -53,8 +53,10 @@ class MLBScoreService: ScoreProvider {
             guard let url = URL(string: urlString) else { continue }
 
             do {
-                let (data, _) = try await session.data(from: url)
-                let schedule = try JSONDecoder().decode(MLBSchedule.self, from: data)
+                let schedule = try await NetworkRetry.withBackoff {
+                    let (data, _) = try await self.session.data(from: url)
+                    return try JSONDecoder().decode(MLBSchedule.self, from: data)
+                }
                 if let game = schedule.dates?.first?.games.first {
                     await MainActor.run {
                         self.gamePks[team] = game.gamePk
@@ -86,11 +88,14 @@ class MLBScoreService: ScoreProvider {
         guard let url = URL(string: urlString) else { return }
 
         do {
-            let startTime = Date()
-            let (data, _) = try await session.data(from: url)
-            StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
-            let feed = try JSONDecoder().decode(MLBLiveFeed.self, from: data)
-            let score = mapToGameScore(feed: feed, gamePk: gamePk)
+            let (feed, score) = try await NetworkRetry.withBackoff {
+                let startTime = Date()
+                let (data, _) = try await self.session.data(from: url)
+                StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
+                let feed = try JSONDecoder().decode(MLBLiveFeed.self, from: data)
+                let score = self.mapToGameScore(feed: feed, gamePk: gamePk)
+                return (feed, score)
+            }
             await MainActor.run {
                 self.activeGames[team] = score
                 self.lastError = nil

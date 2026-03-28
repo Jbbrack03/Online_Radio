@@ -154,7 +154,7 @@ class CarPlayTemplateManager {
                         }
                     }
                 } catch {
-                    print("[CarPlay] Logo fetch failed for \(station.displayName): \(error.localizedDescription)")
+                    AppLogger.network.warning("CarPlay logo fetch failed for \(station.displayName): \(error.localizedDescription)")
                 }
             }
         }

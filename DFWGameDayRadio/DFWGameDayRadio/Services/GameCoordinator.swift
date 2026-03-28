@@ -18,6 +18,11 @@ class GameCoordinator {
     private var activeProviders: [DallasTeam: ScoreProvider] = [:]
     private var wasPlaying = false
 
+    var lastPlayedStation: RadioStation? {
+        guard let raw = UserDefaults.standard.string(forKey: UserDefaultsKeys.lastPlayedStation) else { return nil }
+        return RadioStation(rawValue: raw)
+    }
+
     private init() {}
 
     // MARK: - Public API
@@ -36,6 +41,7 @@ class GameCoordinator {
         }
 
         currentStation = station
+        UserDefaults.standard.set(station.rawValue, forKey: UserDefaultsKeys.lastPlayedStation)
         audioManager.play(station: station)
         startAudioSync()
         startTracking(station: station)

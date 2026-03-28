@@ -43,7 +43,7 @@ class LiveActivityManager {
             )
             activeActivities[team] = activity.id
         } catch {
-            print("Failed to start Live Activity: \(error)")
+            AppLogger.liveActivity.error("Failed to start: \(error.localizedDescription)")
         }
     }
 

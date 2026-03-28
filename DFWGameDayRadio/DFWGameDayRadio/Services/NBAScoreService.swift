@@ -43,10 +43,12 @@ class NBAScoreService: ScoreProvider {
         guard let url = URL(string: NBAEndpoint.scoreboard) else { return }
 
         do {
-            let startTime = Date()
-            let (data, _) = try await session.data(from: url)
-            StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
-            let response = try JSONDecoder().decode(NBAScoreboardResponse.self, from: data)
+            let response = try await NetworkRetry.withBackoff {
+                let startTime = Date()
+                let (data, _) = try await self.session.data(from: url)
+                StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
+                return try JSONDecoder().decode(NBAScoreboardResponse.self, from: data)
+            }
 
             for team in trackedTeams {
                 guard let nbaTeamId = team.nbaTeamID else { continue }

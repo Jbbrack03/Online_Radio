@@ -18,11 +18,100 @@ class AudioStreamManager {
     private var playerItem: AVPlayerItem?
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
+    private var shouldResumeAfterInterruption = false
+    private var reconnectAttempts = 0
+    private let maxReconnectAttempts = 5
+    private var reconnectTask: Task<Void, Never>?
 
-    private init() {}
+    private init() {
+        setupInterruptionHandling()
+    }
+
+    // MARK: - Audio Interruption Handling
+
+    private func setupInterruptionHandling() {
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance(),
+            queue: .main
+        ) { [weak self] notification in
+            self?.handleInterruption(notification)
+        }
+
+        NotificationCenter.default.addObserver(
+            forName: AVAudioSession.routeChangeNotification,
+            object: AVAudioSession.sharedInstance(),
+            queue: .main
+        ) { [weak self] notification in
+            self?.handleRouteChange(notification)
+        }
+    }
+
+    private func handleInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+
+        switch type {
+        case .began:
+            shouldResumeAfterInterruption = isPlaying
+            player?.pause()
+        case .ended:
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+            if options.contains(.shouldResume) && shouldResumeAfterInterruption {
+                player?.play()
+            }
+            shouldResumeAfterInterruption = false
+        @unknown default:
+            break
+        }
+    }
+
+    private func attemptReconnect() {
+        guard let station = currentStation, reconnectAttempts < maxReconnectAttempts else {
+            error = "Stream failed after \(reconnectAttempts) retries"
+            AppLogger.audio.error("Stream failed permanently after \(self.reconnectAttempts) attempts")
+            return
+        }
+        reconnectAttempts += 1
+        let delay = TimeInterval(pow(2.0, Double(reconnectAttempts)))
+        AppLogger.audio.info("Reconnecting in \(delay)s (attempt \(self.reconnectAttempts)/\(self.maxReconnectAttempts))")
+        reconnectTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(delay))
+            guard !Task.isCancelled, let self, let station = self.currentStation else { return }
+            await MainActor.run {
+                self.playStream(station: station)
+            }
+        }
+    }
+
+    private func handleRouteChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+
+        if reason == .oldDeviceUnavailable {
+            player?.pause()
+        }
+    }
 
     func play(station: RadioStation) {
+        reconnectTask?.cancel()
+        reconnectTask = nil
+        reconnectAttempts = 0
         stop()
+        playStream(station: station)
+    }
+
+    /// Internal stream setup — used by both `play` and reconnect.
+    private func playStream(station: RadioStation) {
+        // Tear down existing player without full stop() (preserves reconnect state)
+        player?.pause()
+        statusObservation?.invalidate()
+        timeControlObservation?.invalidate()
+        player = nil
+        playerItem = nil
 
         do {
             let session = AVAudioSession.sharedInstance()
@@ -51,9 +140,10 @@ class AudioStreamManager {
                 switch item.status {
                 case .readyToPlay:
                     self?.isBuffering = false
+                    self?.reconnectAttempts = 0
                 case .failed:
                     self?.isBuffering = false
-                    self?.error = item.error?.localizedDescription ?? "Stream failed"
+                    self?.attemptReconnect()
                 default:
                     break
                 }
@@ -83,6 +173,10 @@ class AudioStreamManager {
     }
 
     func stop() {
+        shouldResumeAfterInterruption = false
+        reconnectTask?.cancel()
+        reconnectTask = nil
+        reconnectAttempts = 0
         player?.pause()
         statusObservation?.invalidate()
         timeControlObservation?.invalidate()

@@ -184,8 +184,14 @@ class StreamLatencyEstimator {
     private func loadCachedLatencies() {
         for station in RadioStation.allCases {
             let key = UserDefaultsKeys.cachedLatency(for: station.rawValue)
+            let dateKey = UserDefaultsKeys.cachedLatencyDate(for: station.rawValue)
             let cached = UserDefaults.standard.double(forKey: key)
-            if cached > 0 {
+            let cachedDate = UserDefaults.standard.object(forKey: dateKey) as? Date
+
+            // Discard cached values older than 7 days
+            let isStale = cachedDate.map { Date().timeIntervalSince($0) > 7 * 24 * 3600 } ?? false
+
+            if cached > 0 && !isStale {
                 estimatedLatency[station] = cached
                 estimateSource[station] = .cached
             } else {
@@ -197,6 +203,8 @@ class StreamLatencyEstimator {
 
     private func cacheLatency(_ latency: TimeInterval, for station: RadioStation) {
         let key = UserDefaultsKeys.cachedLatency(for: station.rawValue)
+        let dateKey = UserDefaultsKeys.cachedLatencyDate(for: station.rawValue)
         UserDefaults.standard.set(latency, forKey: key)
+        UserDefaults.standard.set(Date(), forKey: dateKey)
     }
 }

@@ -50,8 +50,10 @@ class NHLScoreService: ScoreProvider {
         guard let url = URL(string: urlString) else { return }
 
         do {
-            let (data, _) = try await session.data(from: url)
-            let response = try JSONDecoder().decode(NHLScoresResponse.self, from: data)
+            let response = try await NetworkRetry.withBackoff {
+                let (data, _) = try await self.session.data(from: url)
+                return try JSONDecoder().decode(NHLScoresResponse.self, from: data)
+            }
 
             for team in teams {
                 guard let abbrev = team.nhlAbbrev else { continue }
@@ -88,11 +90,13 @@ class NHLScoreService: ScoreProvider {
         guard let url = URL(string: urlString) else { return }
 
         do {
-            let startTime = Date()
-            let (data, _) = try await session.data(from: url)
-            StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
-            let pbp = try JSONDecoder().decode(NHLPlayByPlay.self, from: data)
-            let score = mapToGameScore(pbp: pbp, gameId: gameId)
+            let score = try await NetworkRetry.withBackoff {
+                let startTime = Date()
+                let (data, _) = try await self.session.data(from: url)
+                StreamLatencyEstimator.shared.recordAPILatency(Date().timeIntervalSince(startTime))
+                let pbp = try JSONDecoder().decode(NHLPlayByPlay.self, from: data)
+                return self.mapToGameScore(pbp: pbp, gameId: gameId)
+            }
             await MainActor.run {
                 self.activeGames[team] = score
                 self.lastError = nil

@@ -51,6 +51,11 @@ class ScoreDelayQueue {
         }
 
         queues[team]?.append(event)
+
+        // Cap queue depth at 100 events per team
+        if let count = queues[team]?.count, count > 100 {
+            queues[team]?.removeFirst(count - 100)
+        }
     }
 
     func startProcessing() {

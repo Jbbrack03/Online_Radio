@@ -37,6 +37,21 @@ targets:
       - target: DFWGameDayRadioWidget
         embed: true
 
+  DFWGameDayRadioTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: DFWGameDayRadioTests
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - target: DFWGameDayRadio
+    settings:
+      base:
+        INFOPLIST_FILE: DFWGameDayRadioTests/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+
   DFWGameDayRadioWidget:
     type: app-extension
     platform: iOS
